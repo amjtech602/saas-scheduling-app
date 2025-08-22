@@ -8,6 +8,7 @@ interface BookingPageProps {
   }
 }
 
+
 export default function BookingPage({ params }: BookingPageProps) {
   return <BookingFlow professionalId={params.professionalId} />
 }

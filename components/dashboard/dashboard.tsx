@@ -4,12 +4,28 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useAuth } from "@/components/auth-context"
-import { Calendar, Clock, Settings, Users, LogOut, Plus, ChevronLeft, ChevronRight, Bell, Menu, X } from "lucide-react"
+import {
+  Calendar,
+  Clock,
+  Settings,
+  Users,
+  LogOut,
+  Plus,
+  ChevronLeft,
+  ChevronRight,
+  Bell,
+  Menu,
+  X,
+  CreditCard,
+  DollarSign,
+} from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { ServiceList } from "@/components/services/service-list"
 import { TimetableManager } from "@/components/timetable/timetable-manager"
 import { BookingManagement } from "./booking-management"
+import { SubscriptionOverview } from "@/components/subscription/subscription-overview"
+import { BillingDashboard } from "@/components/billing/billing-dashboard"
 
 const mockAppointments = [
   {
@@ -141,6 +157,8 @@ export function Dashboard() {
                   { id: "services", label: "Services", icon: Settings },
                   { id: "timetable", label: "Timetable", icon: Clock },
                   { id: "clients", label: "Clients", icon: Users },
+                  { id: "billing", label: "Billing", icon: CreditCard },
+                  { id: "earnings", label: "Earnings", icon: DollarSign },
                 ].map(({ id, label, icon: Icon }) => (
                   <button
                     key={id}
@@ -177,6 +195,8 @@ export function Dashboard() {
             { id: "services", label: "Services", icon: Settings },
             { id: "timetable", label: "Timetable", icon: Clock },
             { id: "clients", label: "Clients", icon: Users },
+            { id: "billing", label: "Billing", icon: CreditCard },
+            { id: "earnings", label: "Earnings", icon: DollarSign },
           ].map(({ id, label, icon: Icon }) => (
             <button
               key={id}
@@ -199,6 +219,8 @@ export function Dashboard() {
             { id: "services", label: "Services", icon: Settings },
             { id: "timetable", label: "Timetable", icon: Clock },
             { id: "clients", label: "Clients", icon: Users },
+            { id: "billing", label: "Billing", icon: CreditCard },
+            { id: "earnings", label: "Earnings", icon: DollarSign },
           ].map(({ id, label, icon: Icon }) => (
             <button
               key={id}
@@ -251,7 +273,7 @@ export function Dashboard() {
               </Card>
 
               <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardHeader>
                   <CardTitle className="text-sm font-medium">Total Clients</CardTitle>
                   <Users className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
@@ -480,13 +502,19 @@ export function Dashboard() {
           </div>
         )}
 
+        {activeTab === "billing" && <SubscriptionOverview />}
+
+        {activeTab === "earnings" && <BillingDashboard />}
+
         {/* Placeholder for other tabs */}
         {activeTab !== "overview" &&
           activeTab !== "schedule" &&
           activeTab !== "bookings" &&
           activeTab !== "services" &&
           activeTab !== "timetable" &&
-          activeTab !== "clients" && (
+          activeTab !== "clients" &&
+          activeTab !== "billing" &&
+          activeTab !== "earnings" && (
             <Card>
               <CardHeader>
                 <CardTitle className="capitalize">{activeTab}</CardTitle>

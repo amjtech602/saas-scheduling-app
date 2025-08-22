@@ -1,5 +1,6 @@
 "use client"
 import { AuthProvider, useAuth } from "@/components/auth-context"
+import { PaymentProvider } from "@/components/payment/payment-context"
 import { LoginForm } from "@/components/auth/login-form"
 import { Dashboard } from "@/components/dashboard/dashboard"
 import { Button } from "@/components/ui/button"
@@ -153,7 +154,9 @@ function LandingPage() {
 export default function Home() {
   return (
     <AuthProvider>
-      <AppContent />
+      <PaymentProvider>
+        <AppContent />
+      </PaymentProvider>
     </AuthProvider>
   )
 }

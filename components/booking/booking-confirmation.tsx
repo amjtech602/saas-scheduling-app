@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { Calendar, Clock, User, Mail, Phone, MapPin, CheckCircle } from "lucide-react"
+import { Calendar, Clock, User, Mail, Phone, MapPin, CheckCircle, CreditCard, Shield } from "lucide-react"
 import { format } from "date-fns"
 
 interface BookingConfirmationProps {
@@ -32,6 +32,10 @@ export function BookingConfirmation({
     // In a real app, this would submit to the backend
     onComplete()
   }
+
+  const subtotal = bookingData.service?.price || 0
+  const tax = subtotal * 0.08 // 8% tax
+  const total = subtotal + tax
 
   return (
     <div className="space-y-6">
@@ -119,30 +123,55 @@ export function BookingConfirmation({
         </div>
       </div>
 
-      {/* Payment Summary */}
       <div className="bg-gray-50 p-4 rounded-lg">
-        <h4 className="font-medium text-gray-900 mb-3">Payment Summary</h4>
+        <div className="flex items-center mb-3">
+          <CreditCard className="h-5 w-5 mr-2 text-gray-600" />
+          <h4 className="font-medium text-gray-900">Payment Summary</h4>
+        </div>
+
+        {bookingData.paymentData && (
+          <div className="mb-4 p-3 bg-white rounded border">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <CreditCard className="h-4 w-4 text-gray-600" />
+                <span className="text-sm font-medium">
+                  •••• •••• •••• {bookingData.paymentData.cardNumber.slice(-4)}
+                </span>
+              </div>
+              <div className="flex items-center space-x-1 text-xs text-green-600">
+                <Shield className="h-3 w-3" />
+                <span>Secure</span>
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 mt-1">{bookingData.paymentData.cardholderName}</p>
+          </div>
+        )}
+
         <div className="space-y-2">
           <div className="flex justify-between">
             <span>{bookingData.service?.name}</span>
-            <span>${bookingData.service?.price}</span>
+            <span>${subtotal}</span>
+          </div>
+          <div className="flex justify-between text-sm text-gray-600">
+            <span>Tax</span>
+            <span>${tax.toFixed(2)}</span>
           </div>
           <Separator />
           <div className="flex justify-between font-semibold text-lg">
             <span>Total</span>
-            <span>${bookingData.service?.price}</span>
+            <span>${total.toFixed(2)}</span>
           </div>
         </div>
       </div>
 
-      {/* Important Information */}
       <div className="bg-yellow-50 p-4 rounded-lg">
         <h4 className="font-medium text-yellow-900 mb-2">Important Information</h4>
         <ul className="text-sm text-yellow-800 space-y-1">
           <li>• You will receive a confirmation email shortly after booking</li>
           <li>• Please arrive 5 minutes early for your appointment</li>
           <li>• Cancellations must be made at least 24 hours in advance</li>
-          <li>• Payment will be processed at the time of service</li>
+          <li>• Payment has been securely processed and will appear on your statement</li>
+          <li>• A receipt will be sent to your email address</li>
         </ul>
       </div>
 

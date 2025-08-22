@@ -8,6 +8,7 @@ import { MapPin, Star } from "lucide-react"
 import { ServiceSelection } from "./service-selection"
 import { DateTimeSelection } from "./datetime-selection"
 import { ClientInformation } from "./client-information"
+import { ClientPayment } from "./client-payment"
 import { BookingConfirmation } from "./booking-confirmation"
 import { BookingSuccess } from "./booking-success"
 
@@ -31,6 +32,21 @@ interface Service {
   category: string
 }
 
+interface PaymentData {
+  cardNumber: string
+  expiryMonth: string
+  expiryYear: string
+  cvc: string
+  cardholderName: string
+  billingAddress: {
+    street: string
+    city: string
+    state: string
+    zipCode: string
+    country: string
+  }
+}
+
 interface BookingData {
   service?: Service
   date?: Date
@@ -41,6 +57,7 @@ interface BookingData {
     phone: string
     notes?: string
   }
+  paymentData?: PaymentData
 }
 
 const mockProfessional: Professional = {
@@ -90,12 +107,14 @@ export function BookingFlow({ professionalId }: BookingFlowProps) {
   const [bookingData, setBookingData] = useState<BookingData>({})
   const [bookingId, setBookingId] = useState<string>("")
   const [isComplete, setIsComplete] = useState(false)
+  const [payLater, setPayLater] = useState(false)
 
   const steps = [
     { id: 1, title: "Select Service", component: ServiceSelection },
     { id: 2, title: "Choose Date & Time", component: DateTimeSelection },
     { id: 3, title: "Your Information", component: ClientInformation },
-    { id: 4, title: "Confirmation", component: BookingConfirmation },
+    { id: 4, title: "Payment", component: ClientPayment },
+    { id: 5, title: "Confirmation", component: BookingConfirmation },
   ]
 
   const currentStepData = steps.find((step) => step.id === currentStep)
@@ -108,6 +127,11 @@ export function BookingFlow({ professionalId }: BookingFlowProps) {
     }
   }
 
+  const handlePayLater = () => {
+    setPayLater(true)
+    setCurrentStep(5) // Skip to confirmation
+  }
+
   const handleBack = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1)
@@ -115,22 +139,25 @@ export function BookingFlow({ professionalId }: BookingFlowProps) {
   }
 
   const handleBookingComplete = () => {
-    // Generate booking ID
     const newBookingId = `BK${Date.now().toString().slice(-6)}`
     setBookingId(newBookingId)
     setIsComplete(true)
-
-    // In a real app, this would:
-    // 1. Submit booking to backend
-    // 2. Send confirmation emails
-    // 3. Update professional's calendar
-    // 4. Process payment if required
-    console.log("Booking completed:", { ...bookingData, bookingId: newBookingId })
+    console.log("Booking completed:", {
+      ...bookingData,
+      bookingId: newBookingId,
+      paymentStatus: payLater ? "pending" : "paid",
+    })
   }
 
-  // Show success page after booking completion
   if (isComplete) {
-    return <BookingSuccess bookingData={bookingData} professional={mockProfessional} bookingId={bookingId} />
+    return (
+      <BookingSuccess
+        bookingData={bookingData}
+        professional={mockProfessional}
+        bookingId={bookingId}
+        paymentStatus={payLater ? "pending" : "paid"}
+      />
+    )
   }
 
   return (
@@ -172,7 +199,6 @@ export function BookingFlow({ professionalId }: BookingFlowProps) {
         </Card>
 
         <div className="mb-6 sm:mb-8">
-          {/* Desktop Progress Steps */}
           <div className="hidden sm:flex items-center justify-between">
             {steps.map((step, index) => (
               <div key={step.id} className="flex items-center">
@@ -195,7 +221,6 @@ export function BookingFlow({ professionalId }: BookingFlowProps) {
             ))}
           </div>
 
-          {/* Mobile Progress Steps */}
           <div className="sm:hidden">
             <div className="flex items-center justify-between mb-4">
               <div className="text-sm text-gray-600">
@@ -219,7 +244,8 @@ export function BookingFlow({ professionalId }: BookingFlowProps) {
               {currentStep === 1 && "Choose the service you'd like to book"}
               {currentStep === 2 && "Select your preferred date and time"}
               {currentStep === 3 && "Please provide your contact information"}
-              {currentStep === 4 && "Review and confirm your booking"}
+              {currentStep === 4 && "Enter your payment information"}
+              {currentStep === 5 && "Review and confirm your booking"}
             </CardDescription>
           </CardHeader>
           <CardContent className="px-4 sm:px-6">
@@ -228,15 +254,18 @@ export function BookingFlow({ professionalId }: BookingFlowProps) {
                 services={mockServices}
                 professional={mockProfessional}
                 bookingData={bookingData}
+                service={bookingData.service}
                 onNext={handleNext}
                 onBack={handleBack}
                 onComplete={handleBookingComplete}
+                onPayLater={currentStep === 4 ? handlePayLater : undefined}
                 canGoBack={currentStep > 1}
                 canGoNext={
                   (currentStep === 1 && bookingData.service) ||
                   (currentStep === 2 && bookingData.date && bookingData.time) ||
                   (currentStep === 3 && bookingData.clientInfo) ||
-                  currentStep === 4
+                  (currentStep === 4 && bookingData.paymentData) ||
+                  currentStep === 5
                 }
               />
             )}

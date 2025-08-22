@@ -3,16 +3,31 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle, Calendar, Clock, Mail, Phone, MapPin, Download, Share2 } from "lucide-react"
+import { Separator } from "@/components/ui/separator"
+import {
+  CheckCircle,
+  Calendar,
+  Clock,
+  Mail,
+  Phone,
+  MapPin,
+  Download,
+  Share2,
+  CreditCard,
+  Shield,
+  Receipt,
+  AlertCircle,
+} from "lucide-react"
 import { format } from "date-fns"
 
 interface BookingSuccessProps {
   bookingData: any
   professional: any
   bookingId: string
+  paymentStatus?: "paid" | "pending"
 }
 
-export function BookingSuccess({ bookingData, professional, bookingId }: BookingSuccessProps) {
+export function BookingSuccess({ bookingData, professional, bookingId, paymentStatus = "paid" }: BookingSuccessProps) {
   const formatTime = (time: string) => {
     const [hours, minutes] = time.split(":")
     const hour = Number.parseInt(hours)
@@ -55,6 +70,16 @@ export function BookingSuccess({ bookingData, professional, bookingId }: Booking
     }
   }
 
+  const subtotal = bookingData.service?.price || 0
+  const tax = subtotal * 0.08 // 8% tax
+  const total = subtotal + tax
+
+  const handleDownloadReceipt = () => {
+    // Mock receipt download
+    console.log("Downloading receipt for booking:", bookingId)
+    // In a real app, this would generate and download a PDF receipt
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-indigo-50 flex items-center justify-center p-4">
       <div className="w-full max-w-2xl space-y-6">
@@ -67,7 +92,11 @@ export function BookingSuccess({ bookingData, professional, bookingId }: Booking
           </div>
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Booking Confirmed!</h1>
-            <p className="text-gray-600 mt-2">Your appointment has been successfully scheduled</p>
+            <p className="text-gray-600 mt-2">
+              {paymentStatus === "paid"
+                ? "Your appointment has been successfully scheduled and payment processed"
+                : "Your appointment has been successfully scheduled. Payment will be collected after service completion."}
+            </p>
           </div>
         </div>
 
@@ -154,6 +183,78 @@ export function BookingSuccess({ bookingData, professional, bookingId }: Booking
           </CardContent>
         </Card>
 
+        {/* Payment Confirmation */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <CreditCard className="h-5 w-5 mr-2" />
+              {paymentStatus === "paid" ? "Payment Confirmation" : "Payment Information"}
+            </CardTitle>
+            <CardDescription>
+              {paymentStatus === "paid"
+                ? "Your payment has been successfully processed"
+                : "Payment will be collected after your service is completed"}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {paymentStatus === "paid" && bookingData.paymentData && (
+              <div className="bg-green-50 p-4 rounded-lg">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center space-x-2">
+                    <Shield className="h-4 w-4 text-green-600" />
+                    <span className="text-sm font-medium text-green-900">Payment Successful</span>
+                  </div>
+                  <Badge className="bg-green-100 text-green-800">Paid</Badge>
+                </div>
+                <div className="flex items-center space-x-2 text-sm text-green-700">
+                  <CreditCard className="h-4 w-4" />
+                  <span>•••• •••• •••• {bookingData.paymentData.cardNumber.slice(-4)}</span>
+                </div>
+              </div>
+            )}
+
+            {paymentStatus === "pending" && (
+              <div className="bg-orange-50 p-4 rounded-lg">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center space-x-2">
+                    <AlertCircle className="h-4 w-4 text-orange-600" />
+                    <span className="text-sm font-medium text-orange-900">Payment Pending</span>
+                  </div>
+                  <Badge className="bg-orange-100 text-orange-800">Pay After Service</Badge>
+                </div>
+                <div className="space-y-2 text-sm text-orange-700">
+                  <p>• Payment will be collected after your appointment</p>
+                  <p>• You'll receive a secure payment link via email</p>
+                  <p>• Payment is due within 24 hours of service completion</p>
+                </div>
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>{bookingData.service.name}</span>
+                <span>${subtotal}</span>
+              </div>
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>Tax</span>
+                <span>${tax.toFixed(2)}</span>
+              </div>
+              <Separator />
+              <div className="flex justify-between font-medium">
+                <span>{paymentStatus === "paid" ? "Total Paid" : "Total Due After Service"}</span>
+                <span>${total.toFixed(2)}</span>
+              </div>
+            </div>
+
+            {paymentStatus === "paid" && (
+              <Button variant="outline" onClick={handleDownloadReceipt} className="w-full bg-transparent">
+                <Receipt className="h-4 w-4 mr-2" />
+                Download Receipt
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+
         {/* Next Steps */}
         <Card>
           <CardHeader>
@@ -168,7 +269,9 @@ export function BookingSuccess({ bookingData, professional, bookingId }: Booking
                 <div>
                   <p className="font-medium">Confirmation Email</p>
                   <p className="text-sm text-gray-600">
-                    You'll receive a confirmation email at {bookingData.clientInfo.email} with all the details
+                    You'll receive a confirmation email{" "}
+                    {paymentStatus === "paid" ? "with receipt" : "with booking details"} at{" "}
+                    {bookingData.clientInfo.email}
                   </p>
                 </div>
               </div>
@@ -190,6 +293,19 @@ export function BookingSuccess({ bookingData, professional, bookingId }: Booking
                   <p className="text-sm text-gray-600">Please arrive 5 minutes before your scheduled time</p>
                 </div>
               </div>
+              {paymentStatus === "pending" && (
+                <div className="flex items-start space-x-3">
+                  <div className="bg-orange-100 p-2 rounded-full">
+                    <CreditCard className="h-4 w-4 text-orange-600" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Payment After Service</p>
+                    <p className="text-sm text-gray-600">
+                      You'll receive a secure payment link after your appointment is completed
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
