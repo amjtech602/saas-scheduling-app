@@ -1,19 +1,22 @@
 "use client"
 
-import type React from "react"
-import { useState } from "react"
+import { initiateSocialLogin } from "@/app/services/authService"
+import { useAuth } from "@/components/auth-context"
 import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
-import { useAuth } from "@/components/auth-context"
+import { useI18n } from "@/lib/i18n/context"
 import { Calendar, Clock, Users } from "lucide-react"
-import { initiateSocialLogin } from "@/app/services/authService"
+import type React from "react"
+import { useState } from "react"
+
 
 export function LoginForm() {
   const { login, register } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
+  const { t } = useI18n()
   const [open, setOpen] = useState(false)
   const [loginData, setLoginData] = useState({ email: "", password: "" })
   const [registerData, setRegisterData] = useState({
@@ -51,12 +54,12 @@ export function LoginForm() {
     }
   }
 
- 
+
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default">Sign In</Button>
+        <Button variant="default">{t("auth.signIn")}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
         <div className="space-y-6">
@@ -135,7 +138,7 @@ export function LoginForm() {
                   </Button>
                   <div className="flex items-center space-x-2 mt-2">
                     <div className="h-px flex-1 bg-gray-200" />
-                    <span className="text-xs text-gray-500 uppercase">or</span>
+                    <span className="text-xs text-gray-500">or</span>
                     <div className="h-px flex-1 bg-gray-200" />
                   </div>
 
