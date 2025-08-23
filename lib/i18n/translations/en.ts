@@ -57,6 +57,8 @@ export const translations = {
     signIn: "Sign In",
     signUp: "Sign Up",
     signOut: "Sign Out",
+    signInWithGoogle: "Sign in with Google",
+    or: "or",
     email: "Email",
     password: "Password",
     confirmPassword: "Confirm Password",

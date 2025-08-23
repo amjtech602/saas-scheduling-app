@@ -7,11 +7,12 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+// import { useI18n } from "@/lib/i18n/context"
 import { useI18n } from "@/lib/i18n/context"
+import { DialogTitle } from "@radix-ui/react-dialog"
 import { Calendar, Clock, Users } from "lucide-react"
 import type React from "react"
 import { useState } from "react"
-
 
 export function LoginForm() {
   const { login, register } = useAuth()
@@ -34,7 +35,7 @@ export function LoginForm() {
       await login(loginData.email, loginData.password)
       setOpen(false)
     } catch (error) {
-      console.error("Login failed:", error)
+      console.error(t("auth.loginFailed"), error)
     } finally {
       setIsLoading(false)
     }
@@ -48,7 +49,7 @@ export function LoginForm() {
       await register(registerData.email, registerData.password, registerData.name, registerData.businessName)
       setOpen(false)
     } catch (error) {
-      console.error("Registration failed:", error)
+      console.error(t("auth.registrationFailed"), error)
     } finally {
       setIsLoading(false)
     }
@@ -57,11 +58,12 @@ export function LoginForm() {
 
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={setOpen} >
       <DialogTrigger asChild>
         <Button variant="default">{t("auth.signIn")}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+        <DialogTitle></DialogTitle>
         <div className="space-y-6">
           {/* Header */}
           <div className="text-center space-y-4">
@@ -71,8 +73,8 @@ export function LoginForm() {
               </div>
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">SchedulePro</h2>
-              <p className="text-gray-600 text-sm">Professional scheduling made simple</p>
+              <h2 className="text-2xl font-bold text-gray-900">{t("landing.appName")}</h2>
+              <p className="text-gray-600 text-sm">{t("landing.tagline")}</p>
             </div>
           </div>
 
@@ -82,38 +84,38 @@ export function LoginForm() {
               <div className="bg-gray-50 p-2 rounded-lg">
                 <Calendar className="h-4 w-4 text-blue-600 mx-auto" />
               </div>
-              <p className="text-xs text-gray-600">Smart Scheduling</p>
+              <p className="text-xs text-gray-600">{t("landing.smartScheduling")}</p>
             </div>
             <div className="space-y-2">
               <div className="bg-gray-50 p-2 rounded-lg">
                 <Clock className="h-4 w-4 text-green-600 mx-auto" />
               </div>
-              <p className="text-xs text-gray-600">Time Management</p>
+              <p className="text-xs text-gray-600">{t("landing.timeOptimization")}</p>
             </div>
             <div className="space-y-2">
               <div className="bg-gray-50 p-2 rounded-lg">
                 <Users className="h-4 w-4 text-purple-600 mx-auto" />
               </div>
-              <p className="text-xs text-gray-600">Client Portal</p>
+              <p className="text-xs text-gray-600">{t("landing.clientManagement")}</p>
             </div>
           </div>
 
           {/* Auth Forms */}
           <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="login">Sign In</TabsTrigger>
-              <TabsTrigger value="register">Get Started</TabsTrigger>
+              <TabsTrigger value="login">{t("auth.signIn")}</TabsTrigger>
+              <TabsTrigger value="register">{t("auth.getStarted")}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="login">
               <div className="space-y-4">
                 <div className="space-y-1">
-                  <h3 className="text-lg font-semibold">Welcome back</h3>
-                  <p className="text-sm text-gray-600">Sign in to your professional dashboard</p>
+                  <h3 className="text-lg font-semibold">{t("auth.welcomeBack")}</h3>
+                  <p className="text-sm text-gray-600">{t("auth.signInDescription")}</p>
                 </div>
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="login-email">Email</Label>
+                    <Label htmlFor="login-email">{t("auth.email")}</Label>
                     <Input
                       id="login-email"
                       type="email"
@@ -124,7 +126,7 @@ export function LoginForm() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="login-password">Password</Label>
+                    <Label htmlFor="login-password">{t("auth.password")}</Label>
                     <Input
                       id="login-password"
                       type="password"
@@ -134,11 +136,12 @@ export function LoginForm() {
                     />
                   </div>
                   <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? "Signing in..." : "Sign In"}
+                    {isLoading ? t("auth.signingIn") : t("auth.signIn")}
                   </Button>
+
                   <div className="flex items-center space-x-2 mt-2">
                     <div className="h-px flex-1 bg-gray-200" />
-                    <span className="text-xs text-gray-500">or</span>
+                    <span className="text-xs text-gray-500">{t("auth.or")}</span>
                     <div className="h-px flex-1 bg-gray-200" />
                   </div>
 
@@ -151,12 +154,10 @@ export function LoginForm() {
                     <img
                       src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
                       alt="Google"
-                      className="w-5 h-5"
+                      className="w-4 h-4"
                     />
-                    <span className="text-sm">Sign in with Google</span>
+                    <span className="text-sm">{t("auth.signInWithGoogle")}</span>
                   </Button>
-
-
                 </form>
               </div>
             </TabsContent>
@@ -164,12 +165,12 @@ export function LoginForm() {
             <TabsContent value="register">
               <div className="space-y-4">
                 <div className="space-y-1">
-                  <h3 className="text-lg font-semibold">Create your account</h3>
-                  <p className="text-sm text-gray-600">Start managing your appointments today</p>
+                  <h3 className="text-lg font-semibold">{t("auth.createAccount")}</h3>
+                  <p className="text-sm text-gray-600">{t("auth.createAccountDescription")}</p>
                 </div>
                 <form onSubmit={handleRegister} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="register-name">Full Name</Label>
+                    <Label htmlFor="register-name">{t("auth.fullName")}</Label>
                     <Input
                       id="register-name"
                       placeholder="John Doe"
@@ -179,7 +180,7 @@ export function LoginForm() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="register-business">Business Name (Optional)</Label>
+                    <Label htmlFor="register-business">{t("auth.businessNameOptional")}</Label>
                     <Input
                       id="register-business"
                       placeholder="Doe Consulting"
@@ -188,7 +189,7 @@ export function LoginForm() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="register-email">Email</Label>
+                    <Label htmlFor="register-email">{t("auth.email")}</Label>
                     <Input
                       id="register-email"
                       type="email"
@@ -199,7 +200,7 @@ export function LoginForm() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="register-password">Password</Label>
+                    <Label htmlFor="register-password">{t("auth.password")}</Label>
                     <Input
                       id="register-password"
                       type="password"
@@ -209,7 +210,7 @@ export function LoginForm() {
                     />
                   </div>
                   <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? "Creating account..." : "Create Account"}
+                    {isLoading ? t("auth.creatingAccount") : t("auth.createAccountButton")}
                   </Button>
                 </form>
               </div>
