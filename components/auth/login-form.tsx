@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { useAuth } from "@/components/auth-context"
 import { Calendar, Clock, Users } from "lucide-react"
+import { initiateSocialLogin } from "@/app/services/authService"
 
 export function LoginForm() {
   const { login, register } = useAuth()
@@ -50,12 +51,14 @@ export function LoginForm() {
     }
   }
 
+ 
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="default">Sign In</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
         <div className="space-y-6">
           {/* Header */}
           <div className="text-center space-y-4">
@@ -130,6 +133,27 @@ export function LoginForm() {
                   <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? "Signing in..." : "Sign In"}
                   </Button>
+                  <div className="flex items-center space-x-2 mt-2">
+                    <div className="h-px flex-1 bg-gray-200" />
+                    <span className="text-xs text-gray-500 uppercase">or</span>
+                    <div className="h-px flex-1 bg-gray-200" />
+                  </div>
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => initiateSocialLogin('google')}
+                    className="w-full mt-2 flex items-center justify-center gap-2"
+                  >
+                    <img
+                      src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                      alt="Google"
+                      className="w-5 h-5"
+                    />
+                    <span className="text-sm">Sign in with Google</span>
+                  </Button>
+
+
                 </form>
               </div>
             </TabsContent>
