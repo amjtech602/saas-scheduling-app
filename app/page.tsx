@@ -1,17 +1,27 @@
 "use client"
-import { AuthProvider, useAuth } from "@/components/auth-context"
+import { AuthProvider } from "@/components/auth-context"
 import { LoginForm } from "@/components/auth/login-form"
 import { Dashboard } from "@/components/dashboard/dashboard"
 import { PaymentProvider } from "@/components/payment/payment-context"
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { I18nProvider, useI18n } from "@/lib/i18n/context"
+import { useI18n } from "@/lib/i18n/context"
 import { ArrowRight, Calendar, Clock, Star, Users } from "lucide-react"
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 function AppContent() {
-  const { user, loading } = useAuth()
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
-  if (loading) {
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/");
+    }
+  }, [status, router]);
+
+  if (status === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -19,10 +29,11 @@ function AppContent() {
     )
   }
 
-  return user ? <Dashboard /> : <LandingPage />
+  return session ? <Dashboard /> : <LandingPage />
 }
 
 function LandingPage() {
+  const { data: session, status } = useSession();
   const { t } = useI18n()
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
@@ -151,12 +162,10 @@ function LandingPage() {
 
 export default function Home() {
   return (
-    <I18nProvider>
-      <AuthProvider>
-        <PaymentProvider>
-          <AppContent />
-        </PaymentProvider>
-      </AuthProvider>
-    </I18nProvider>
+    <AuthProvider>
+      <PaymentProvider>
+        <AppContent />
+      </PaymentProvider>
+    </AuthProvider>
   )
 }

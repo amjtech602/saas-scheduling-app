@@ -1,16 +1,17 @@
 "use client"
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useI18n } from "@/lib/i18n/context"
 import { MapPin, Star } from "lucide-react"
-import { ServiceSelection } from "./service-selection"
-import { DateTimeSelection } from "./datetime-selection"
-import { ClientInformation } from "./client-information"
-import { ClientPayment } from "./client-payment"
+import { useState } from "react"
 import { BookingConfirmation } from "./booking-confirmation"
 import { BookingSuccess } from "./booking-success"
+import { ClientInformation } from "./client-information"
+import { ClientPayment } from "./client-payment"
+import { DateTimeSelection } from "./datetime-selection"
+import { ServiceSelection } from "./service-selection"
 
 interface Professional {
   id: string
@@ -30,6 +31,7 @@ interface Service {
   price: number
   duration: number
   category: string
+  language: 'en' | 'pt-BR'
 }
 
 interface PaymentData {
@@ -62,7 +64,7 @@ interface BookingData {
 
 const mockProfessional: Professional = {
   id: "1",
-  name: "Dr. Sarah Johnson",
+  name: "Dr. Samuel Johnson",
   businessName: "Johnson Consulting",
   bio: "Experienced business consultant with over 10 years of expertise in strategy and operations. I help businesses optimize their processes and achieve sustainable growth.",
   location: "New York, NY",
@@ -79,6 +81,7 @@ const mockServices: Service[] = [
     price: 150,
     duration: 60,
     category: "consultation",
+    language: 'en'
   },
   {
     id: "2",
@@ -87,6 +90,7 @@ const mockServices: Service[] = [
     price: 75,
     duration: 30,
     category: "consultation",
+    language: 'en'
   },
   {
     id: "3",
@@ -95,6 +99,35 @@ const mockServices: Service[] = [
     price: 200,
     duration: 90,
     category: "workshop",
+    language: 'en'
+  },
+  {
+    id: "1",
+    name: "Consultor de Negócios",
+    description:
+      "Estratégia de negócios abrangente e sessão de planejamento para ajudá-lo a identificar oportunidades e superar desafios.",
+    price: 150,
+    duration: 60,
+    category: "consulta",
+    language: 'pt-BR'
+  },
+  {
+    id: "2",
+    name: "Sessão de Acompanhamento",
+    description: "Check-in rápido e revisão do progresso para garantir que você esteja no caminho certo com seus objetivos.",
+    price: 75,
+    duration: 30,
+    category: "consulta",
+    language: 'pt-BR'
+  },
+  {
+    id: "3",
+    name: "Workshop de Planejamento Estratégico",
+    description: "Sessão de planejamento estratégico aprofundada com análise abrangente e recomendações práticas.",
+    price: 200,
+    duration: 90,
+    category: "workshop",
+    language: 'pt-BR'
   },
 ]
 
@@ -108,13 +141,16 @@ export function BookingFlow({ professionalId }: BookingFlowProps) {
   const [bookingId, setBookingId] = useState<string>("")
   const [isComplete, setIsComplete] = useState(false)
   const [payLater, setPayLater] = useState(false)
+  const { t, language } = useI18n()
+
+  const mockServicesByLanguage = mockServices.filter(service => service.language === language);
 
   const steps = [
-    { id: 1, title: "Select Service", component: ServiceSelection },
-    { id: 2, title: "Choose Date & Time", component: DateTimeSelection },
-    { id: 3, title: "Your Information", component: ClientInformation },
-    { id: 4, title: "Payment", component: ClientPayment },
-    { id: 5, title: "Confirmation", component: BookingConfirmation },
+    { id: 1, title: t("booking.selectService"), component: ServiceSelection },
+    { id: 2, title: t("booking.selectDateTime"), component: DateTimeSelection },
+    { id: 3, title: t("booking.yourInformation"), component: ClientInformation },
+    { id: 4, title: t("booking.payment"), component: ClientPayment },
+    { id: 5, title: t("booking.confirmation"), component: BookingConfirmation },
   ]
 
   const currentStepData = steps.find((step) => step.id === currentStep)
@@ -142,11 +178,11 @@ export function BookingFlow({ professionalId }: BookingFlowProps) {
     const newBookingId = `BK${Date.now().toString().slice(-6)}`
     setBookingId(newBookingId)
     setIsComplete(true)
-    console.log("Booking completed:", {
-      ...bookingData,
-      bookingId: newBookingId,
-      paymentStatus: payLater ? "pending" : "paid",
-    })
+    // console.log("Booking completed:", {
+    //   ...bookingData,
+    //   bookingId: newBookingId,
+    //   paymentStatus: payLater ? "pending" : "paid",
+    // })
   }
 
   if (isComplete) {
@@ -189,7 +225,7 @@ export function BookingFlow({ professionalId }: BookingFlowProps) {
                   <div className="flex items-center justify-center sm:justify-start space-x-1">
                     <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                     <span>{mockProfessional.rating}</span>
-                    <span>({mockProfessional.reviewCount} reviews)</span>
+                    <span>({mockProfessional.reviewCount})</span>
                   </div>
                 </div>
                 <p className="text-gray-700 leading-relaxed text-sm sm:text-base">{mockProfessional.bio}</p>
@@ -203,9 +239,8 @@ export function BookingFlow({ professionalId }: BookingFlowProps) {
             {steps.map((step, index) => (
               <div key={step.id} className="flex items-center">
                 <div
-                  className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
-                    currentStep >= step.id ? "bg-blue-600 border-blue-600 text-white" : "border-gray-300 text-gray-500"
-                  }`}
+                  className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${currentStep >= step.id ? "bg-blue-600 border-blue-600 text-white" : "border-gray-300 text-gray-500"
+                    }`}
                 >
                   {step.id}
                 </div>
@@ -241,7 +276,7 @@ export function BookingFlow({ professionalId }: BookingFlowProps) {
           <CardHeader className="pb-4 sm:pb-6">
             <CardTitle className="text-lg sm:text-xl">{currentStepData?.title}</CardTitle>
             <CardDescription className="text-sm sm:text-base">
-              {currentStep === 1 && "Choose the service you'd like to book"}
+              {currentStep === 1 && t("booking.selectServiceDescription")}
               {currentStep === 2 && "Select your preferred date and time"}
               {currentStep === 3 && "Please provide your contact information"}
               {currentStep === 4 && "Enter your payment information"}
@@ -251,7 +286,7 @@ export function BookingFlow({ professionalId }: BookingFlowProps) {
           <CardContent className="px-4 sm:px-6">
             {CurrentStepComponent && (
               <CurrentStepComponent
-                services={mockServices}
+                services={mockServicesByLanguage}
                 professional={mockProfessional}
                 bookingData={bookingData}
                 service={bookingData.service}
@@ -273,7 +308,7 @@ export function BookingFlow({ professionalId }: BookingFlowProps) {
         </Card>
 
         <div className="mt-6 sm:mt-8 text-center text-xs sm:text-sm text-gray-500 px-4">
-          <p>Powered by SchedulePro • Secure booking platform for professionals</p>
+          <p>{t("booking.footerDescription")}</p>
         </div>
       </div>
     </div>

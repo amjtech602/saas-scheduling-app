@@ -28,9 +28,13 @@ export function ServiceSelection({ services, bookingData, onNext, canGoNext }: S
       consultation: "bg-blue-100 text-blue-800",
       coaching: "bg-green-100 text-green-800",
       therapy: "bg-purple-100 text-purple-800",
-      training: "bg-orange-100 text-orange-800",
       workshop: "bg-pink-100 text-pink-800",
       other: "bg-gray-100 text-gray-800",
+      consulta: "bg-blue-100 text-blue-800",
+      treinamento: "bg-green-100 text-green-800",
+      terapia: "bg-purple-100 text-purple-800",
+      outro: "bg-gray-100 text-gray-800",
+
     }
     return colors[category as keyof typeof colors] || colors.other
   }

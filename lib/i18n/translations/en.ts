@@ -102,6 +102,7 @@ export const translations = {
   booking: {
     bookAppointment: "Book Appointment",
     selectService: "Select Service",
+    selectServiceDescription: "Choose the service you'd like to book",
     selectDateTime: "Select Date & Time",
     clientInformation: "Client Information",
     payment: "Payment",
@@ -116,6 +117,7 @@ export const translations = {
     availableSlots: "Available time slots",
     noSlotsAvailable: "No slots available for this date",
     fillClientInfo: "Please fill in your information",
+    yourInformation: "Your Information",
     payNow: "Pay Now",
     payLater: "Pay After Service",
     payLaterBenefits: "Pay after your service is completed",
@@ -124,6 +126,7 @@ export const translations = {
     bookingReference: "Booking Reference",
     addToCalendar: "Add to Calendar",
     downloadReceipt: "Download Receipt",
+    footerDescription: "Powered by SchedulePro • Secure booking platform for professionals"
   },
   services: {
     addService: "Add Service",

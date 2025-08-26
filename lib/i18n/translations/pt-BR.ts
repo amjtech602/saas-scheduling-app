@@ -102,6 +102,7 @@ export const translations = {
   booking: {
     bookAppointment: "Agendar Consulta",
     selectService: "Selecionar Serviço",
+    selectServiceDescription: "Escolha o serviço que você gostaria de agendar",
     selectDateTime: "Selecionar Data e Hora",
     clientInformation: "Informações do Cliente",
     payment: "Pagamento",
@@ -116,6 +117,7 @@ export const translations = {
     availableSlots: "Horários disponíveis",
     noSlotsAvailable: "Nenhum horário disponível para esta data",
     fillClientInfo: "Preencha suas informações",
+    yourInformation: "Suas Informações",
     payNow: "Pagar Agora",
     payLater: "Pagar Após o Serviço",
     payLaterBenefits: "Pague após a conclusão do seu serviço",
@@ -124,6 +126,7 @@ export const translations = {
     bookingReference: "Referência do Agendamento",
     addToCalendar: "Adicionar ao Calendário",
     downloadReceipt: "Baixar Recibo",
+    footerDescription: "Desenvolvido por SchedulePro • Plataforma segura de agendamentos para profissionais"
   },
   services: {
     addService: "Adicionar Serviço",

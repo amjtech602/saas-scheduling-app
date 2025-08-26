@@ -1,7 +1,5 @@
 "use client"
 
-import { initiateSocialLogin } from "@/app/services/authService"
-import { useAuth } from "@/components/auth-context"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
@@ -11,14 +9,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useI18n } from "@/lib/i18n/context"
 import { DialogTitle } from "@radix-ui/react-dialog"
 import { Calendar, Clock, Users } from "lucide-react"
+import { signIn } from "next-auth/react"
+import { useRouter } from "next/navigation"
 import type React from "react"
 import { useState } from "react"
 
 export function LoginForm() {
-  const { login, register } = useAuth()
+  // const { login, register } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
   const { t } = useI18n()
   const [open, setOpen] = useState(false)
+  const [error, setError] = useState("")
   const [loginData, setLoginData] = useState({ email: "", password: "" })
   const [registerData, setRegisterData] = useState({
     email: "",
@@ -31,28 +33,43 @@ export function LoginForm() {
     e.preventDefault()
     setIsLoading(true)
 
-    try {
-      await login(loginData.email, loginData.password)
-      setOpen(false)
-    } catch (error) {
-      console.error(t("auth.loginFailed"), error)
-    } finally {
-      setIsLoading(false)
+
+    const result = await signIn('credentials', {
+      redirect: false,
+      email: loginData.email,
+      password: loginData.password
+    });
+
+    if (result?.error) {
+      setError(result.error)
+    } else {
+      router.push("/");
     }
+
+    setIsLoading(false)
+
+    // try {
+    //   await login(loginData.email, loginData.password)
+    //   setOpen(false)
+    // } catch (error) {
+    //   console.error(t("auth.loginFailed"), error)
+    // } finally {
+    //   setIsLoading(false)
+    // }
   }
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
-    try {
-      await register(registerData.email, registerData.password, registerData.name, registerData.businessName)
-      setOpen(false)
-    } catch (error) {
-      console.error(t("auth.registrationFailed"), error)
-    } finally {
-      setIsLoading(false)
-    }
+    // try {
+    //   await register(registerData.email, registerData.password, registerData.name, registerData.businessName)
+    //   setOpen(false)
+    // } catch (error) {
+    //   console.error(t("auth.registrationFailed"), error)
+    // } finally {
+    //   setIsLoading(false)
+    // }
   }
 
 
@@ -138,6 +155,7 @@ export function LoginForm() {
                   <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? t("auth.signingIn") : t("auth.signIn")}
                   </Button>
+                  {error && <p className="text-red-500">{error}</p>}
 
                   <div className="flex items-center space-x-2 mt-2">
                     <div className="h-px flex-1 bg-gray-200" />
@@ -148,7 +166,8 @@ export function LoginForm() {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => initiateSocialLogin('google')}
+                    // onClick={() => initiateSocialLogin('google')}
+                    onClick={() => signIn("google", { callbackUrl: "/" })}
                     className="w-full mt-2 flex items-center justify-center gap-2"
                   >
                     <img

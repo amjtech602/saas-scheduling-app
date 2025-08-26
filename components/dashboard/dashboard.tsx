@@ -1,31 +1,32 @@
 "use client"
 
-import { useState } from "react"
+import { useAuth } from "@/components/auth-context"
+import { BillingDashboard } from "@/components/billing/billing-dashboard"
+import { ServiceList } from "@/components/services/service-list"
+import { SubscriptionOverview } from "@/components/subscription/subscription-overview"
+import { TimetableManager } from "@/components/timetable/timetable-manager"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { useAuth } from "@/components/auth-context"
 import {
+  Bell,
   Calendar,
-  Clock,
-  Settings,
-  Users,
-  LogOut,
-  Plus,
   ChevronLeft,
   ChevronRight,
-  Bell,
-  Menu,
-  X,
+  Clock,
   CreditCard,
   DollarSign,
+  LogOut,
+  Menu,
+  Plus,
+  Settings,
+  Users,
+  X,
 } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { ServiceList } from "@/components/services/service-list"
-import { TimetableManager } from "@/components/timetable/timetable-manager"
+import { signOut, useSession } from "next-auth/react"
+import { useState } from "react"
 import { BookingManagement } from "./booking-management"
-import { SubscriptionOverview } from "@/components/subscription/subscription-overview"
-import { BillingDashboard } from "@/components/billing/billing-dashboard"
 
 const mockAppointments = [
   {
@@ -68,6 +69,7 @@ const mockServices = [
 ]
 
 export function Dashboard() {
+  const { data: session, status } = useSession();
   const { user, logout } = useAuth()
   const [activeTab, setActiveTab] = useState("overview")
   const [currentWeek, setCurrentWeek] = useState(new Date())
@@ -122,10 +124,19 @@ export function Dashboard() {
                 <Plus className="h-4 w-4 mr-2" />
                 Quick Book
               </Button>
+              <div className="mx-5 text-gray-700 font-semibold text-xs">
+                <div>
+                  {session?.user?.name}
+                </div>
+                <div>
+                  {session?.user?.email}
+                </div>
+              </div>
               <Button variant="ghost" size="sm">
                 <Bell className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="sm" className="hidden sm:flex" onClick={logout}>
+              {/* <Button variant="ghost" size="sm" className="hidden sm:flex" onClick={logout}> */}
+              <Button variant="ghost" size="sm" className="hidden sm:flex" onClick={() => signOut({ callbackUrl: "/" })}>
                 <LogOut className="h-4 w-4 mr-2" />
                 Sign Out
               </Button>
@@ -166,11 +177,10 @@ export function Dashboard() {
                       setActiveTab(id)
                       setMobileMenuOpen(false)
                     }}
-                    className={`w-full flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors ${
-                      activeTab === id
-                        ? "bg-blue-100 text-blue-700"
-                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                    }`}
+                    className={`w-full flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === id
+                      ? "bg-blue-100 text-blue-700"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                      }`}
                   >
                     <Icon className="h-5 w-5" />
                     <span>{label}</span>
@@ -201,9 +211,8 @@ export function Dashboard() {
             <button
               key={id}
               onClick={() => setActiveTab(id)}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
-                activeTab === id ? "bg-blue-100 text-blue-700" : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-              }`}
+              className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${activeTab === id ? "bg-blue-100 text-blue-700" : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                }`}
             >
               <Icon className="h-4 w-4" />
               <span className="hidden xs:inline">{label}</span>
@@ -225,9 +234,8 @@ export function Dashboard() {
             <button
               key={id}
               onClick={() => setActiveTab(id)}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                activeTab === id ? "bg-blue-100 text-blue-700" : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-              }`}
+              className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === id ? "bg-blue-100 text-blue-700" : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                }`}
             >
               <Icon className="h-4 w-4" />
               <span>{label}</span>
