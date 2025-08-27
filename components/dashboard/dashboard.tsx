@@ -139,7 +139,7 @@ export function Dashboard() {
                             {/* <Button variant="ghost" size="sm" className="hidden sm:flex" onClick={logout}> */}
                             <Button variant="ghost" size="sm" className="hidden sm:flex" onClick={() => signOut({ callbackUrl: "/" })}>
                                 <LogOut className="h-4 w-4 mr-2" />
-                                Sign Out
+                                Sair
                             </Button>
                             <Button
                                 variant="ghost"

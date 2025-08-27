@@ -24,11 +24,11 @@ interface Service {
 const mockServices: Service[] = [
   {
     id: "1",
-    name: "Business Consultation",
-    description: "Comprehensive business strategy and planning session",
+    name: "Consulta Empresarial",
+    description: "Estratégia de negócios abrangente e sessão de planejamento",
     price: 150,
     duration: 60,
-    category: "consultation",
+    category: "consulta",
     isActive: true,
     requiresPreparation: true,
     maxAdvanceBooking: 30,
@@ -36,11 +36,11 @@ const mockServices: Service[] = [
   },
   {
     id: "2",
-    name: "Follow-up Session",
-    description: "Quick check-in and progress review",
+    name: "Sessão de Acompanhamento",
+    description: "Check-in rápido e revisão do progresso",
     price: 75,
     duration: 30,
-    category: "consultation",
+    category: "consulta",
     isActive: true,
     requiresPreparation: false,
     maxAdvanceBooking: 14,
@@ -48,8 +48,8 @@ const mockServices: Service[] = [
   },
   {
     id: "3",
-    name: "Strategy Planning Workshop",
-    description: "Deep-dive strategic planning session",
+    name: "Workshop de Planejamento Estratégico",
+    description: "Sessão de planejamento estratégico aprofundado",
     price: 200,
     duration: 90,
     category: "workshop",
@@ -60,11 +60,11 @@ const mockServices: Service[] = [
   },
   {
     id: "4",
-    name: "Quick Call",
-    description: "Brief consultation call",
+    name: "Chamada rápida",
+    description: "Breve chamada de consulta",
     price: 50,
     duration: 15,
-    category: "consultation",
+    category: "consulta",
     isActive: false,
     requiresPreparation: false,
     maxAdvanceBooking: 7,
@@ -117,14 +117,13 @@ export function ServiceList() {
 
   const getCategoryColor = (category: string) => {
     const colors = {
-      consultation: "bg-blue-100 text-blue-800",
-      coaching: "bg-green-100 text-green-800",
-      therapy: "bg-purple-100 text-purple-800",
-      training: "bg-orange-100 text-orange-800",
+      consulta: "bg-blue-100 text-blue-800",
+      treinamento: "bg-green-100 text-green-800",
+      terapia: "bg-purple-100 text-purple-800",
       workshop: "bg-pink-100 text-pink-800",
-      other: "bg-gray-100 text-gray-800",
+      outra: "bg-gray-100 text-gray-800",
     }
-    return colors[category as keyof typeof colors] || colors.other
+    return colors[category as keyof typeof colors] || colors.outra
   }
 
   if (showForm) {
@@ -207,7 +206,7 @@ export function ServiceList() {
                 </CardDescription>
 
                 <div className="flex justify-between items-center">
-                  <span className="text-2xl font-bold">${service.price}</span>
+                  <span className="text-2xl font-bold">R$ {service.price}</span>
                   <span className="text-sm text-gray-500">{service.duration} min</span>
                 </div>
 
