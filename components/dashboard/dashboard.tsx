@@ -165,8 +165,8 @@ export function Dashboard() {
                             <nav className="p-4 space-y-2">
                                 {[
                                     { id: "overview", label: "Visão Geral", icon: Calendar },
-                                    { id: "schedule", label: "Schedule", icon: Clock },
-                                    { id: "bookings", label: "Bookings", icon: Bell },
+                                    { id: "schedule", label: "Programação", icon: Clock },
+                                    { id: "bookings", label: "Reservas", icon: Bell },
                                     { id: "services", label: "Services", icon: Settings },
                                     { id: "timetable", label: "Timetable", icon: Clock },
                                     { id: "clients", label: "Clients", icon: Users },
@@ -202,8 +202,8 @@ export function Dashboard() {
                 <nav className="flex space-x-2 sm:space-x-8 mb-6 sm:mb-8 overflow-x-auto pb-2 sm:pb-0 sm:hidden">
                     {[
                         { id: "overview", label: "Visão Geral", icon: Calendar },
-                        { id: "schedule", label: "Schedule", icon: Clock },
-                        { id: "bookings", label: "Bookings", icon: Bell },
+                        { id: "schedule", label: "Programação", icon: Clock },
+                        { id: "bookings", label: "Reservas", icon: Bell },
                         { id: "services", label: "Services", icon: Settings },
                         { id: "timetable", label: "Timetable", icon: Clock },
                         { id: "clients", label: "Clients", icon: Users },
@@ -225,8 +225,8 @@ export function Dashboard() {
                 <nav className="hidden sm:flex space-x-8 mb-8">
                     {[
                         { id: "overview", label: "Visão Geral", icon: Calendar },
-                        { id: "schedule", label: "Schedule", icon: Clock },
-                        { id: "bookings", label: "Bookings", icon: Bell },
+                        { id: "schedule", label: "Progamação", icon: Clock },
+                        { id: "bookings", label: "Reservas", icon: Bell },
                         { id: "services", label: "Services", icon: Settings },
                         { id: "timetable", label: "Timetable", icon: Clock },
                         { id: "clients", label: "Clients", icon: Users },
@@ -360,14 +360,15 @@ export function Dashboard() {
                     </div>
                 )}
 
+                {/* schedule  */}
                 {activeTab === "schedule" && (
                     <div className="space-y-6">
                         <Card>
                             <CardHeader>
                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-4 sm:space-y-0">
                                     <div>
-                                        <CardTitle className="text-lg sm:text-xl">Weekly Schedule</CardTitle>
-                                        <CardDescription>Manage your appointments and availability</CardDescription>
+                                        <CardTitle className="text-lg sm:text-xl">Programação Semanal</CardTitle>
+                                        <CardDescription>Gerencie seus compromissos e disponibilidade</CardDescription>
                                     </div>
                                     <div className="flex items-center justify-center space-x-2">
                                         <Button variant="outline" size="sm" onClick={() => navigateWeek("prev")}>
@@ -392,16 +393,16 @@ export function Dashboard() {
                                             <div className="space-y-1 min-h-[200px] bg-gray-50 rounded-lg p-2">
                                                 {index === 1 && (
                                                     <div className="bg-blue-100 border-l-4 border-blue-500 p-2 rounded text-xs">
-                                                        <p className="font-medium">9:00 AM</p>
+                                                        <p className="font-medium">9:00</p>
                                                         <p>Sarah J.</p>
-                                                        <p className="text-gray-600">Consultation</p>
+                                                        <p className="text-gray-600">Consulta</p>
                                                     </div>
                                                 )}
                                                 {index === 1 && (
                                                     <div className="bg-green-100 border-l-4 border-green-500 p-2 rounded text-xs">
-                                                        <p className="font-medium">2:00 PM</p>
+                                                        <p className="font-medium">14:00</p>
                                                         <p>Mike C.</p>
-                                                        <p className="text-gray-600">Follow-up</p>
+                                                        <p className="text-gray-600">Acompanhamento</p>
                                                     </div>
                                                 )}
                                             </div>
@@ -499,7 +500,7 @@ export function Dashboard() {
                                                 <p className="text-xs sm:text-sm text-gray-500 truncate">{client.email}</p>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-xs sm:text-sm font-medium">{client.totalBookings} bookings</p>
+                                                <p className="text-xs sm:text-sm font-medium">{client.totalBookings} reservas</p>
                                                 <p className="text-xs text-gray-500">Last: {client.lastBooking}</p>
                                             </div>
                                             <Button variant="outline" size="sm" className="text-xs sm:text-sm bg-transparent">
