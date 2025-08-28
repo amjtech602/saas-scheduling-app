@@ -202,7 +202,7 @@ export function ServiceList() {
             <CardContent>
               <div className="space-y-4">
                 <CardDescription className="text-sm">
-                  {service.description || "No description provided"}
+                  {service.description || "Nenhuma descrição fornecida"}
                 </CardDescription>
 
                 <div className="flex justify-between items-center">

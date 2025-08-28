@@ -36,7 +36,7 @@ export function ServiceForm({ service, onSave, onCancel }: ServiceFormProps) {
     description: service?.description || "",
     price: service?.price || 0,
     duration: service?.duration || 30,
-    category: service?.category || "consultation",
+    category: service?.category || "consulta",
     isActive: service?.isActive ?? true,
     requiresPreparation: service?.requiresPreparation || false,
     maxAdvanceBooking: service?.maxAdvanceBooking || 30,
@@ -136,11 +136,11 @@ export function ServiceForm({ service, onSave, onCancel }: ServiceFormProps) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="consultation">Consulta</SelectItem>
-                  <SelectItem value="coaching">Treinamento</SelectItem>
-                  <SelectItem value="therapy">Terapia</SelectItem>                  
+                  <SelectItem value="consulta">Consulta</SelectItem>
+                  <SelectItem value="treinamento">Treinamento</SelectItem>
+                  <SelectItem value="terapia">Terapia</SelectItem>                  
                   <SelectItem value="workshop">Workshop</SelectItem>
-                  <SelectItem value="other">Outra</SelectItem>
+                  <SelectItem value="outra">Outra</SelectItem>
                 </SelectContent>
               </Select>
             </div>

@@ -1,13 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
-import { Trash2, Plus, Clock } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Switch } from "@/components/ui/switch"
+import { Clock, Plus, Trash2 } from "lucide-react"
+import { useState } from "react"
 
 interface TimeSlot {
   start: string
@@ -24,14 +24,33 @@ interface WeeklyAvailability {
 }
 
 const DAYS = [
-  { key: "monday", label: "Monday" },
-  { key: "tuesday", label: "Tuesday" },
-  { key: "wednesday", label: "Wednesday" },
-  { key: "thursday", label: "Thursday" },
-  { key: "friday", label: "Friday" },
-  { key: "saturday", label: "Saturday" },
-  { key: "sunday", label: "Sunday" },
+  { key: "monday", label: "Segunda" },
+  { key: "tuesday", label: "Terça" },
+  { key: "wednesday", label: "Quarta" },
+  { key: "thursday", label: "Quinta" },
+  { key: "friday", label: "Sexta" },
+  { key: "saturday", label: "Sábado" },
+  { key: "sunday", label: "Domingo" },
 ]
+
+const timezoneOptions = [
+  { value: "America/Noronha", label: "UTC-02:00 - Fernando de Noronha" },
+  { value: "America/Sao_Paulo", label: "UTC-03:00 - Horário de Brasília" },
+  { value: "America/Belem", label: "UTC-03:00 - Pará e Amapá" },
+  { value: "America/Fortaleza", label: "UTC-03:00 - Ceará" },
+  { value: "America/Recife", label: "UTC-03:00 - Pernambuco" },
+  { value: "America/Maceio", label: "UTC-03:00 - Alagoas" },
+  { value: "America/Bahia", label: "UTC-03:00 - Bahia" },
+  { value: "America/Araguaina", label: "UTC-03:00 - Tocantins" },
+  { value: "America/Cuiaba", label: "UTC-04:00 - Mato Grosso" },
+  { value: "America/Campo_Grande", label: "UTC-04:00 - Mato Grosso do Sul" },
+  { value: "America/Porto_Velho", label: "UTC-04:00 - Rondônia" },
+  { value: "America/Boa_Vista", label: "UTC-04:00 - Roraima" },
+  { value: "America/Manaus", label: "UTC-04:00 - Amazonas (maior parte)" },
+  { value: "America/Rio_Branco", label: "UTC-05:00 - Acre" },
+  { value: "America/Eirunepe", label: "UTC-05:00 - Amazonas (sudoeste)" }
+];
+
 
 const TIME_OPTIONS = Array.from({ length: 48 }, (_, i) => {
   const hour = Math.floor(i / 2)
@@ -39,8 +58,8 @@ const TIME_OPTIONS = Array.from({ length: 48 }, (_, i) => {
   const time24 = `${hour.toString().padStart(2, "0")}:${minute}`
   const hour12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour
   const ampm = hour < 12 ? "AM" : "PM"
-  const time12 = `${hour12}:${minute} ${ampm}`
-  return { value: time24, label: time12 }
+  // const time12 = `${hour12}:${minute} ${ampm}`
+  return { value: time24, label: time24 }
 })
 
 export function AvailabilitySettings() {
@@ -55,7 +74,7 @@ export function AvailabilitySettings() {
   })
 
   const [bufferTime, setBufferTime] = useState(15)
-  const [timezone, setTimezone] = useState("America/New_York")
+  const [timezone, setTimezone] = useState("America/Sao_Paulo")
 
   const toggleDayAvailability = (day: string) => {
     setAvailability((prev) => ({
@@ -123,49 +142,47 @@ export function AvailabilitySettings() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">Availability Settings</h2>
-          <p className="text-gray-600">Configure your working hours and availability</p>
+          <h2 className="text-2xl font-bold">Configurações de disponibilidade</h2>
+          <p className="text-gray-600">Configure seu horário de trabalho e disponibilidade</p>
         </div>
-        <Button>Save Changes</Button>
+        <Button>Salvar alterações</Button>
       </div>
 
       {/* Global Settings */}
       <Card>
         <CardHeader>
-          <CardTitle>Global Settings</CardTitle>
-          <CardDescription>Settings that apply to all appointments</CardDescription>
+          <CardTitle>Configurações globais</CardTitle>
+          <CardDescription>Configurações que se aplicam a todos os compromissos</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="buffer-time">Buffer Time Between Appointments</Label>
+              <Label htmlFor="buffer-time">Intervalo entre atendimentos</Label>
               <Select value={bufferTime.toString()} onValueChange={(value) => setBufferTime(Number.parseInt(value))}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="0">No buffer</SelectItem>
-                  <SelectItem value="5">5 minutes</SelectItem>
-                  <SelectItem value="10">10 minutes</SelectItem>
-                  <SelectItem value="15">15 minutes</SelectItem>
-                  <SelectItem value="30">30 minutes</SelectItem>
-                  <SelectItem value="60">1 hour</SelectItem>
+                  <SelectItem value="0">Sem intervalo</SelectItem>
+                  <SelectItem value="5">5 minutos</SelectItem>
+                  <SelectItem value="10">10 minutos</SelectItem>
+                  <SelectItem value="15">15 minutos</SelectItem>
+                  <SelectItem value="30">30 minutos</SelectItem>
+                  <SelectItem value="60">1 hora</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="timezone">Timezone</Label>
+              <Label htmlFor="timezone">Fuso horário</Label>
               <Select value={timezone} onValueChange={setTimezone}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="America/New_York">Eastern Time (ET)</SelectItem>
-                  <SelectItem value="America/Chicago">Central Time (CT)</SelectItem>
-                  <SelectItem value="America/Denver">Mountain Time (MT)</SelectItem>
-                  <SelectItem value="America/Los_Angeles">Pacific Time (PT)</SelectItem>
-                  <SelectItem value="UTC">UTC</SelectItem>
+                  {timezoneOptions.map(tz => (
+                    <SelectItem key={tz.value} value={tz.value}>{tz.label}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -176,30 +193,30 @@ export function AvailabilitySettings() {
       {/* Weekly Availability */}
       <Card>
         <CardHeader>
-          <CardTitle>Weekly Availability</CardTitle>
-          <CardDescription>Set your available hours for each day of the week</CardDescription>
+          <CardTitle>Disponibilidade Semanal</CardTitle>
+          <CardDescription>Defina seus horários disponíveis para cada dia da semana</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {DAYS.map(({ key, label }) => (
             <div key={key} className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  <Switch checked={availability[key].isAvailable} onCheckedChange={() => toggleDayAvailability(key)} />
+                  <Switch className="cursor-pointer" checked={availability[key].isAvailable} onCheckedChange={() => toggleDayAvailability(key)} />
                   <Label className="text-base font-medium">{label}</Label>
                   {availability[key].isAvailable && (
                     <Badge variant="secondary" className="text-xs">
-                      {availability[key].timeSlots.length} slot{availability[key].timeSlots.length !== 1 ? "s" : ""}
+                      {availability[key].timeSlots.length} período{availability[key].timeSlots.length !== 1 ? "s" : ""}
                     </Badge>
                   )}
                 </div>
                 {availability[key].isAvailable && (
                   <div className="flex space-x-2">
-                    <Button variant="outline" size="sm" onClick={() => addTimeSlot(key)}>
+                    <Button className="cursor-pointer" variant="outline" size="sm" onClick={() => addTimeSlot(key)}>
                       <Plus className="h-4 w-4 mr-1" />
-                      Add Slot
+                      Adicionar Período Disponível
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => copyToAllDays(key)}>
-                      Copy to All
+                    <Button className="cursor-pointer" variant="outline" size="sm" onClick={() => copyToAllDays(key)}>
+                      Copiar para todos
                     </Button>
                   </div>
                 )}
@@ -259,7 +276,7 @@ export function AvailabilitySettings() {
               )}
 
               {!availability[key].isAvailable && (
-                <div className="ml-8 text-sm text-gray-500 italic">Not available on {label.toLowerCase()}</div>
+                <div className="ml-8 text-sm text-gray-500 italic">Não disponível em {label.toLowerCase()}</div>
               )}
             </div>
           ))}
