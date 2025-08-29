@@ -1,5 +1,5 @@
 "use client"
-import { AuthProvider } from "@/components/auth-context"
+//import { AuthProvider } from "@/components/auth-context"
 import { LoginForm } from "@/components/auth/login-form"
 import { Dashboard } from "@/components/dashboard/dashboard"
 import { PaymentProvider } from "@/components/payment/payment-context"
@@ -7,33 +7,48 @@ import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useI18n } from "@/lib/i18n/context"
 import { ArrowRight, Calendar, Clock, Star, Users } from "lucide-react"
-import { useSession } from "next-auth/react"
+//import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
+import { UserProvider, useUser } from '@/context/UserContext' // substituindo o nextAuth
 
 function AppContent() {
-  const { data: session, status } = useSession();
+ // const { data: session, status } = useSession();
+  const { user, loading } = useUser()
   const router = useRouter();
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/");
-    }
-  }, [status, router]);
+  // useEffect(() => {
+  //   if (status === "unauthenticated") {
+  //     router.push("/");
+  //   }
+  // }, [status, router]);
 
-  if (status === "loading") {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    )
-  }
+//   if (status === "loading") {
+//     return (
+//       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+//         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+//       </div>
+//     )
+//   }
 
-  return session ? <Dashboard /> : <LandingPage />
+//   return session ? <Dashboard /> : <LandingPage />
+// }
+
+
+if (loading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    </div>
+  )
 }
 
+return user ? <Dashboard /> : <LandingPage />
+}
+
+
 function LandingPage() {
-  const { data: session, status } = useSession();
+  
   const { t } = useI18n()
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
@@ -162,10 +177,12 @@ function LandingPage() {
 
 export default function Home() {
   return (
-    <AuthProvider>
+  <UserProvider>
+    {/* <AuthProvider> */}
       <PaymentProvider>
         <AppContent />
       </PaymentProvider>
-    </AuthProvider>
+    {/* </AuthProvider> */}
+  </UserProvider>
   )
 }

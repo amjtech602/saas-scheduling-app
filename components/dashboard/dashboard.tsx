@@ -1,7 +1,8 @@
 "use client"
 
-import { useAuth } from "@/components/auth-context"
+//import { useAuth } from "@/components/auth-context"
 import { BillingDashboard } from "@/components/billing/billing-dashboard"
+import { UserProvider, useUser } from '@/context/UserContext' // substituindo o nextAuth
 import { ServiceList } from "@/components/services/service-list"
 import { SubscriptionOverview } from "@/components/subscription/subscription-overview"
 import { TimetableManager } from "@/components/timetable/timetable-manager"
@@ -70,7 +71,9 @@ const mockServices = [
 
 export function Dashboard() {
     const { data: session, status } = useSession();
-    const { user, logout } = useAuth()
+    //const { user, logout } = useAuth()
+    const { user, loading,logout } = useUser();
+    console.log("Dashboard contruido com user", user)
     const [activeTab, setActiveTab] = useState("overview")
     const [currentWeek, setCurrentWeek] = useState(new Date())
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -137,7 +140,8 @@ export function Dashboard() {
                                 <Bell className="h-4 w-4" />
                             </Button>
                             {/* <Button variant="ghost" size="sm" className="hidden sm:flex" onClick={logout}> */}
-                            <Button variant="ghost" size="sm" className="hidden sm:flex" onClick={() => signOut({ callbackUrl: "/" })}>
+                            {/* <Button variant="ghost" size="sm" className="hidden sm:flex" onClick={() => signOut({ callbackUrl: "/" })}> */} 
+                            <Button variant="ghost" size="sm" className="hidden sm:flex" onClick={() => logout()}>
                                 <LogOut className="h-4 w-4 mr-2" />
                                 Sair
                             </Button>
