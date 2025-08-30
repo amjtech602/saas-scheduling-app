@@ -120,7 +120,7 @@ export function Dashboard() {
                             </div>
                             <div>
                                 <h1 className="text-xl font-semibold text-gray-900">SchedulePro</h1>
-                                <p className="text-sm text-gray-500 hidden sm:block">{user?.businessName || user?.name}</p>
+                                <p className="text-sm text-gray-500 hidden sm:block">{user?.businessName || user?.firstName}</p>
                             </div>
                         </div>
                         <div className="flex items-center space-x-2">

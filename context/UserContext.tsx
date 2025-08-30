@@ -10,12 +10,26 @@ import {
 import { useRouter } from 'next/navigation'
 import axios from 'axios';
 
+// interface User {
+//   id: string
+//   name: string
+//   email: string,
+//   businessName:string,
+//   avatar?: string
+// }
 interface User {
-  id: string
-  name: string
-  email: string,
-  businessName:string,
-  avatar?: string
+    id:Number,
+    email:string
+    firstName:string,
+    lastName:string,
+    timeZone:string
+    role:string,
+    subscriptionId:number,
+    picture:string
+    authProvider:string
+    providerId:number
+    businessName:string,
+    avatar?: string
 }
 
 interface UserContextType {
@@ -48,7 +62,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
           }
         )
 
-        setUser(response.data.user)
+        console.log("userrrrrrrrrr ",response.data);
+
+        setUser(response.data)
       } catch (err) {
         console.error('Erro ao buscar usuário:', err)
         setUser(null)
