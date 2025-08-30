@@ -1,17 +1,18 @@
 "use client"
 
-import { useState } from "react"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
-import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { CalendarIcon, Plus, Trash2, Clock, X } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 import { format } from "date-fns"
+import { ptBR } from "date-fns/locale"
+import { CalendarIcon, Clock, Plus, Trash2, X } from "lucide-react"
+import { useState } from "react"
 
 interface BlockedTime {
   id: string
@@ -31,23 +32,23 @@ const TIME_OPTIONS = Array.from({ length: 48 }, (_, i) => {
   const time24 = `${hour.toString().padStart(2, "0")}:${minute}`
   const hour12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour
   const ampm = hour < 12 ? "AM" : "PM"
-  const time12 = `${hour12}:${minute} ${ampm}`
-  return { value: time24, label: time12 }
+  // const time12 = `${hour12}:${minute} ${ampm}`
+  return { value: time24, label: time24 }
 })
 
 const BLOCK_TYPES = [
-  { value: "break", label: "Break", color: "bg-yellow-100 text-yellow-800" },
-  { value: "personal", label: "Personal", color: "bg-blue-100 text-blue-800" },
-  { value: "maintenance", label: "Maintenance", color: "bg-gray-100 text-gray-800" },
-  { value: "other", label: "Other", color: "bg-purple-100 text-purple-800" },
+  { value: "break", label: "Intervalo", color: "bg-yellow-100 text-yellow-800" },
+  { value: "personal", label: "Pessoal", color: "bg-blue-100 text-blue-800" },
+  { value: "maintenance", label: "Manutenção", color: "bg-gray-100 text-gray-800" },
+  { value: "other", label: "outro", color: "bg-purple-100 text-purple-800" },
 ]
 
 export function BlockedTimes() {
   const [blockedTimes, setBlockedTimes] = useState<BlockedTime[]>([
     {
       id: "1",
-      title: "Lunch Break",
-      description: "Daily lunch break",
+      title: "Intervalo",
+      description: "Intervalo diário",
       date: new Date(),
       startTime: "12:00",
       endTime: "13:00",
@@ -57,7 +58,7 @@ export function BlockedTimes() {
     },
     {
       id: "2",
-      title: "Doctor Appointment",
+      title: "Consulta Médica",
       date: new Date(Date.now() + 86400000), // Tomorrow
       startTime: "14:00",
       endTime: "15:30",
@@ -139,12 +140,12 @@ export function BlockedTimes() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">Blocked Times</h2>
-          <p className="text-gray-600">Manage breaks, personal time, and unavailable periods</p>
+          <h2 className="text-2xl font-bold">Horários Bloqueados</h2>
+          <p className="text-gray-600">Gerencie pausas, tempo pessoal e períodos indisponíveis</p>
         </div>
         <Button onClick={() => setShowForm(true)}>
           <Plus className="h-4 w-4 mr-2" />
-          Block Time
+          Bloquear Horário
         </Button>
       </div>
 
@@ -154,9 +155,9 @@ export function BlockedTimes() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>{editingBlock ? "Edit Blocked Time" : "Block New Time"}</CardTitle>
+                <CardTitle>{editingBlock ? "Editar Bloqueio de Horário" : "Bloquear Novo Período"}</CardTitle>
                 <CardDescription>
-                  {editingBlock ? "Update blocked time details" : "Create a new blocked time period"}
+                  {editingBlock ? "Atualizar detalhes de horário bloqueado" : "Crie um novo período de bloqueio"}
                 </CardDescription>
               </div>
               <Button variant="ghost" size="sm" onClick={resetForm}>
@@ -167,17 +168,17 @@ export function BlockedTimes() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="title">Title</Label>
+                <Label htmlFor="title">Título</Label>
                 <Input
                   id="title"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="e.g., Lunch Break"
+                  placeholder="ex. Intervalo para o café"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="type">Type</Label>
+                <Label htmlFor="type">Tipo</Label>
                 <Select
                   value={formData.type}
                   onValueChange={(value) => setFormData({ ...formData, type: value as BlockedTime["type"] })}
@@ -197,24 +198,25 @@ export function BlockedTimes() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Description (Optional)</Label>
+              <Label htmlFor="description">Descrição (Opcional)</Label>
               <Textarea
                 id="description"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Additional details..."
+                placeholder="Detalhes adicionais..."
                 rows={2}
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4"> */}
+            <div className="flex flex-col md:flex-row gap-4">
               <div className="space-y-2">
-                <Label>Date</Label>
+                <Label>Data</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="w-full justify-start text-left font-normal bg-transparent">
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {formData.date ? format(formData.date, "PPP") : "Pick a date"}
+                      {formData.date ? format(formData.date, "PPP", {locale: ptBR}) : "Pick a date"}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
@@ -222,14 +224,15 @@ export function BlockedTimes() {
                       mode="single"
                       selected={formData.date}
                       onSelect={(date) => setFormData({ ...formData, date: date || new Date() })}
-                      initialFocus
+                      autoFocus
+                      locale={ptBR}
                     />
                   </PopoverContent>
                 </Popover>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="start-time">Start Time</Label>
+                <Label htmlFor="start-time">Início</Label>
                 <Select
                   value={formData.startTime}
                   onValueChange={(value) => setFormData({ ...formData, startTime: value })}
@@ -248,7 +251,7 @@ export function BlockedTimes() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="end-time">End Time</Label>
+                <Label htmlFor="end-time">Fim</Label>
                 <Select
                   value={formData.endTime}
                   onValueChange={(value) => setFormData({ ...formData, endTime: value })}
@@ -269,9 +272,9 @@ export function BlockedTimes() {
 
             <div className="flex justify-end space-x-4">
               <Button variant="outline" onClick={resetForm}>
-                Cancel
+                Cancelar
               </Button>
-              <Button onClick={handleSaveBlock}>{editingBlock ? "Update" : "Create"} Block</Button>
+              <Button onClick={handleSaveBlock}>{editingBlock ? "Atualizar" : "Criar"} Bloqueio</Button>
             </div>
           </CardContent>
         </Card>
@@ -280,18 +283,18 @@ export function BlockedTimes() {
       {/* Blocked Times List */}
       <Card>
         <CardHeader>
-          <CardTitle>Current Blocked Times</CardTitle>
-          <CardDescription>Your scheduled breaks and unavailable periods</CardDescription>
+          <CardTitle>Bloqueios Atuais</CardTitle>
+          <CardDescription>Seus intervalos programados e períodos indisponíveis</CardDescription>
         </CardHeader>
         <CardContent>
           {blockedTimes.length === 0 ? (
             <div className="text-center py-8">
               <Clock className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No blocked times</h3>
-              <p className="text-gray-500 mb-4">You haven't blocked any time periods yet</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Sem horários bloqueados</h3>
+              <p className="text-gray-500 mb-4">Você ainda não bloqueou nenhum período</p>
               <Button onClick={() => setShowForm(true)}>
                 <Plus className="h-4 w-4 mr-2" />
-                Block Your First Time
+                Crie seu primeiro bloqueio
               </Button>
             </div>
           ) : (
@@ -302,9 +305,9 @@ export function BlockedTimes() {
                   <div key={block.id} className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center space-x-4">
                       <div className="flex flex-col items-center text-sm">
-                        <span className="font-medium">{format(block.date, "MMM")}</span>
+                        <span className="font-medium">{format(block.date, "MMM", { locale: ptBR })}</span>
                         <span className="text-2xl font-bold">{format(block.date, "d")}</span>
-                        <span className="text-gray-500">{format(block.date, "EEE")}</span>
+                        <span className="text-gray-500">{format(block.date, "EEEEEE", { locale: ptBR })}</span>
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-1">
@@ -324,7 +327,7 @@ export function BlockedTimes() {
                     </div>
                     <div className="flex space-x-2">
                       <Button variant="outline" size="sm" onClick={() => handleEditBlock(block)}>
-                        Edit
+                        Editar
                       </Button>
                       <Button
                         variant="outline"

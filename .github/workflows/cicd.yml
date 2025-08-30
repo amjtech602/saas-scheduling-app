@@ -1,0 +1,31 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Install SSH key
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      
+    - name: Ignore SSH host key checking
+      run: |
+        mkdir -p ~/.ssh
+        touch ~/.ssh/config
+        echo "StrictHostKeyChecking no" >> ~/.ssh/config
+
+    - name: Acessar o servidor e listar diretório
+      run: |
+        ssh root@anotadoai.com.br "cd /dados/webapps/saas-scheduling-app && git fetch && git reset --hard origin/develop && npm install --force && npm run build &&  pm2 restart saas-scheduling-app"
+      
+    

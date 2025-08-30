@@ -1,6 +1,8 @@
-import type { Metadata } from 'next'
-import { GeistSans } from 'geist/font/sans'
+import Providers from '@/components/providers'
+import { I18nProvider } from '@/lib/i18n/context'
 import { GeistMono } from 'geist/font/mono'
+import { GeistSans } from 'geist/font/sans'
+import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -25,7 +27,11 @@ html {
 }
         `}</style>
       </head>
-      <body>{children}</body>
+      <Providers>
+        <I18nProvider>
+          <body>{children}</body>
+        </I18nProvider>
+      </Providers>
     </html>
   )
 }
