@@ -105,9 +105,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
 const logout = async () => {
     try {
-    //   await axios.post('https://anotadoai.com.br/agendei-api/v1/auth/logout', {}, {  // falta implementar este endpoint
-    //     withCredentials: true,
-    //   })
+      await axios.post('https://anotadoai.com.br/agendei-api/v1/auth/logout', {}, {  // falta implementar este endpoint
+        withCredentials: true,
+      })
     } catch (error) {
       console.warn('Erro ao deslogar:', error)
     } finally {
