@@ -4,8 +4,11 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { GetServices } from "@/src/application/useCases/GetServices"
+import { Service } from "@/src/domain/Service"
+import { ServiceRepositoryHttp } from "@/src/infra/repositories/ServiceRepositoryHttp"
 import { Copy, Edit, Eye, EyeOff, MoreHorizontal, Trash2 } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ServiceForm } from "./service-form"
 
 interface Service {
@@ -73,9 +76,30 @@ const mockServices: Service[] = [
 ]
 
 export function ServiceList() {
+
   const [services, setServices] = useState<Service[]>(mockServices)
   const [editingService, setEditingService] = useState<Service | null>(null)
   const [showForm, setShowForm] = useState(false)
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+
+        const repo = new ServiceRepositoryHttp();
+        const usecase = new GetServices(repo);
+
+        const data = await usecase.execute();
+        console.log({ data });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchServices();
+  }, []);
 
   const handleSaveService = (serviceData: Service) => {
     if (editingService) {
@@ -125,6 +149,9 @@ export function ServiceList() {
     }
     return colors[category as keyof typeof colors] || colors.outra
   }
+
+  if (loading) return <p>Carregando...</p>;
+
 
   if (showForm) {
     return (

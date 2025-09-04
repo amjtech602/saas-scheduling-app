@@ -1,5 +1,6 @@
-import { type NextRequest, NextResponse } from "next/server"
-import type { Service, CreateServiceRequest, ApiResponse } from "@/lib/api-types"
+import type { ApiResponse, CreateServiceRequest, Service } from "@/lib/api-types";
+import axios from "axios";
+import { type NextRequest, NextResponse } from "next/server";
 
 /**
  * GET /api/services
@@ -17,50 +18,59 @@ import type { Service, CreateServiceRequest, ApiResponse } from "@/lib/api-types
  * - data: Service[] array
  * - pagination: object with page info
  */
-export async function GET(request: NextRequest) {
+// export async function GET(request: NextRequest) {
+//   try {
+//     const { searchParams } = new URL(request.url)
+//     const page = Number.parseInt(searchParams.get("page") || "1")
+//     const limit = Math.min(Number.parseInt(searchParams.get("limit") || "10"), 100)
+//     const category = searchParams.get("category")
+//     const isActive = searchParams.get("isActive")
+
+//     // TODO: Get user ID from JWT token
+//     // TODO: Query database with filters and pagination
+
+//     // Mock services data
+//     const mockServices: Service[] = [
+//       {
+//         id: "1",
+//         userId: "1",
+//         name: "Business Consultation",
+//         description: "Strategic business planning and consultation",
+//         duration: 60,
+//         price: 15000, // $150.00 in cents
+//         currency: "USD",
+//         category: "Consulting",
+//         isActive: true,
+//         requiresPreparation: true,
+//         preparationTime: 15,
+//         maxBookingsPerDay: 4,
+//         bufferTime: 10,
+//         createdAt: new Date().toISOString(),
+//         updatedAt: new Date().toISOString(),
+//       },
+//     ]
+
+//     return NextResponse.json<ApiResponse<Service[]>>({
+//       success: true,
+//       data: mockServices,
+//     })
+//   } catch (error) {
+//     return NextResponse.json<ApiResponse>(
+//       {
+//         success: false,
+//         error: "Internal server error",
+//       },
+//       { status: 500 },
+//     )
+//   }
+// }
+
+export async function GET() {
   try {
-    const { searchParams } = new URL(request.url)
-    const page = Number.parseInt(searchParams.get("page") || "1")
-    const limit = Math.min(Number.parseInt(searchParams.get("limit") || "10"), 100)
-    const category = searchParams.get("category")
-    const isActive = searchParams.get("isActive")
-
-    // TODO: Get user ID from JWT token
-    // TODO: Query database with filters and pagination
-
-    // Mock services data
-    const mockServices: Service[] = [
-      {
-        id: "1",
-        userId: "1",
-        name: "Business Consultation",
-        description: "Strategic business planning and consultation",
-        duration: 60,
-        price: 15000, // $150.00 in cents
-        currency: "USD",
-        category: "Consulting",
-        isActive: true,
-        requiresPreparation: true,
-        preparationTime: 15,
-        maxBookingsPerDay: 4,
-        bufferTime: 10,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      },
-    ]
-
-    return NextResponse.json<ApiResponse<Service[]>>({
-      success: true,
-      data: mockServices,
-    })
-  } catch (error) {
-    return NextResponse.json<ApiResponse>(
-      {
-        success: false,
-        error: "Internal server error",
-      },
-      { status: 500 },
-    )
+    const {data} = await axios.get("https://anotadoai.com.br/agendei-api/v1/services");
+    return NextResponse.json(data);
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: err.response?.status || 500 });
   }
 }
 

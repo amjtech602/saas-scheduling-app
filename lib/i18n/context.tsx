@@ -50,20 +50,20 @@ export function I18nProvider({ children }: I18nProviderProps) {
 
   const t = (key: string, params?: Record<string, string | number>): string => {
     const translations = translationsMap[language]
-    console.log("[v0] Translating key:", key, "with language:", language)
+    // console.log("[v0] Translating key:", key, "with language:", language)
 
     const keys = key.split(".")
     let value: any = translations
 
     for (const k of keys) {
-      console.log("[v0] Looking for key:", k, "in value:", value)
+      // console.log("[v0] Looking for key:", k, "in value:", value)
       value = value?.[k]
     }
 
-    console.log("[v0] Final translation value:", value)
+    // console.log("[v0] Final translation value:", value)
 
     if (typeof value !== "string") {
-      console.warn(`[v0] Translation key "${key}" not found for language "${language}"`)
+      // console.warn(`[v0] Translation key "${key}" not found for language "${language}"`)
       return key
     }
 
