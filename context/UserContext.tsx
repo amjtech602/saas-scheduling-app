@@ -35,15 +35,15 @@ interface User {
 interface UserContextType {
   user: User | null
   loading: boolean
-//   loginWithGoogle: () => Promise<void>
-   logout: () => void
+  initiateSocialLogin: (provider: string, redirectPath?: string) => Promise<void>
+  logout: () => void
 }
 
 const UserContext = createContext<UserContextType>({
   user: null,
   loading: true,
-//   loginWithGoogle: async () => {},
-   logout: () => {},
+  initiateSocialLogin: async (_provider: string, _redirectPath?: string) => {},
+  logout: () => {},
 })
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
@@ -76,32 +76,15 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     loadUser()
   }, [])
 
-//   const loginWithGoogle = async () => {
-//     try {
-//       const res = await fetch('/api/auth/google', {
-//         method: 'GET',
-//         credentials: 'include',
-//       })
 
-//       if (!res.ok) {
-//         throw new Error('Erro ao iniciar login')
-//       }
 
-//       // Aqui você provavelmente vai ser redirecionado, ou já está autenticado
-//       // Opcional: pode forçar reload ou re-fetch do user
-//       const userRes = await fetch('/api/me', {
-//         credentials: 'include',
-//       })
+ const initiateSocialLogin = async (provider:string, redirectPath = '/') => {
+  const baseUrl = window.location.origin; // exemplo: http://localhost:3000 ou https://flexybot.com.br
+  const fullRedirect = `${baseUrl}${redirectPath}`;
+  const encodedRedirect = encodeURIComponent(fullRedirect);
+  window.location.href = `https://anotadoai.com.br/agendei-api/v1/auth/${provider}-login?redirect_uri=${encodedRedirect}`;
 
-//       if (!userRes.ok) throw new Error('Erro ao carregar usuário')
-
-//       const data = await userRes.json()
-//       setUser(data.user)
-//     } catch (error) {
-//       console.error('Login com Google falhou:', error)
-//       setUser(null)
-//     }
-//   }
+};
 
 const logout = async () => {
     try {
@@ -117,7 +100,7 @@ const logout = async () => {
   }
 
   return (
-    <UserContext.Provider value={{ user, loading,logout}}>
+    <UserContext.Provider value={{ user, loading,logout,initiateSocialLogin}}>
       {children}
     </UserContext.Provider>
   )

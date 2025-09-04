@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useUser } from '@/context/UserContext'; 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 // import { useI18n } from "@/lib/i18n/context"
 import { useI18n } from "@/lib/i18n/context"
@@ -15,6 +16,7 @@ import type React from "react"
 import { useState } from "react"
 export function LoginForm() {
   // const { login, register } = useAuth()
+  const { user, loading, logout,initiateSocialLogin } = useUser();
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const { t } = useI18n()
@@ -165,7 +167,7 @@ export function LoginForm() {
                   <Button
                     type="button"
                     variant="outline"
-                    //  onClick={() => initiateSocialLogin('google')}
+                     // onClick={() => initiateSocialLogin('google')}
                      onClick={() => signIn('google')}
                     className="w-full mt-2 flex items-center justify-center gap-2"
                   >

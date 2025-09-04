@@ -8,14 +8,15 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { useI18n } from "@/lib/i18n/context"
 import { ArrowRight, Calendar, Clock, Star, Users } from "lucide-react"
 //import { useSession } from "next-auth/react"
-import { UserProvider } from '@/context/UserContext'; // substituindo o nextAuth
+import { UserProvider,useUser } from '@/context/UserContext'; // substituindo o nextAuth
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 
+
 function AppContent() {
   const { data: session, status } = useSession();
-  // const { user, loading } = useUser()
+   const { user, loading } = useUser()
   const router = useRouter();
 
   useEffect(() => {
@@ -36,13 +37,13 @@ function AppContent() {
   }
 
 
-  // if (loading) {
-  //   return (
-  //     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-  //       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-  //     </div>
-  //   )
-  // }
+//   if (loading) {
+//     return (
+//       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+//         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+//       </div>
+//     )
+//   }
 
 //   return user ? <Dashboard /> : <LandingPage />
 // }
