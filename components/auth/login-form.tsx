@@ -13,7 +13,6 @@ import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import type React from "react"
 import { useState } from "react"
-import { initiateSocialLogin } from "@/app/services/authService"
 export function LoginForm() {
   // const { login, register } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
@@ -166,8 +165,8 @@ export function LoginForm() {
                   <Button
                     type="button"
                     variant="outline"
-                     onClick={() => initiateSocialLogin('google')}
-                    //onClick={() => signIn("google", { callbackUrl: "/" })}
+                    //  onClick={() => initiateSocialLogin('google')}
+                     onClick={() => signIn('google')}
                     className="w-full mt-2 flex items-center justify-center gap-2"
                   >
                     <img
