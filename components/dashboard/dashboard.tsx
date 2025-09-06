@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { useUser } from '@/context/UserContext'; 
+import { useUser } from '@/context/UserContext'
 import {
     Bell,
     Calendar,
@@ -25,7 +25,7 @@ import {
     Users,
     X,
 } from "lucide-react"
-import { signOut, useSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import { useState } from "react"
 import { BookingManagement } from "./booking-management"
 
@@ -141,7 +141,7 @@ export function Dashboard() {
                             <Button variant="ghost" size="sm">
                                 <Bell className="h-4 w-4" />
                             </Button>
-                            <Button variant="ghost" size="sm" className="hidden sm:flex" onClick={logout}>
+                            <Button variant="ghost" size="sm" className="hidden sm:flex" onClick={() => logout()}>
                             {/* <Button variant="ghost" size="sm" className="hidden sm:flex" onClick={() => signOut({ callbackUrl: "/" })}> */}
                             {/* <Button variant="ghost" size="sm" className="hidden sm:flex" onClick={() => signOut()}> */}
                                 <LogOut className="h-4 w-4 mr-2" />
@@ -195,7 +195,7 @@ export function Dashboard() {
                                     </button>
                                 ))}
                                 <div className="pt-4 border-t">
-                                    <Button variant="ghost" className="w-full justify-start" onClick={logout}>
+                                    <Button variant="ghost" className="w-full justify-start" onClick={() => logout()}>
                                         <LogOut className="h-4 w-4 mr-3" />
                                         Sign Out
                                     </Button>

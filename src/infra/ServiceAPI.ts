@@ -1,4 +1,4 @@
-import { Service } from "../domain/Service";
+import { Service } from "../domain/entities/Service";
 
 const VERSAO = process.env.VERSAO;
 const BASE_URL = `${process.env.API_URL}${VERSAO}`;

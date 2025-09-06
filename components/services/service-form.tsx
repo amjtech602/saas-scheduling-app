@@ -9,46 +9,40 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import { CreateServiceDTO } from "@/src/domain/dto/ServiceDTO"
 import { X } from "lucide-react"
 import { useState } from "react"
 
-interface Service {
-  id?: string
-  name: string
-  description: string
-  price: number
-  duration: number
-  category: string
-  isActive: boolean
-  requiresPreparation: boolean
-  maxAdvanceBooking: number
-}
 
 interface ServiceFormProps {
-  service?: Service
-  onSave: (service: Service) => void
+  service?: CreateServiceDTO
+  onSave: (service: CreateServiceDTO) => void
   onCancel: () => void
 }
 
 export function ServiceForm({ service, onSave, onCancel }: ServiceFormProps) {
-  const [formData, setFormData] = useState<Service>({
-    name: service?.name || "",
-    description: service?.description || "",
-    price: service?.price || 0,
-    duration: service?.duration || 30,
-    category: service?.category || "consulta",
-    isActive: service?.isActive ?? true,
-    requiresPreparation: service?.requiresPreparation || false,
-    maxAdvanceBooking: service?.maxAdvanceBooking || 30,
-    ...service,
-  })
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onSave(formData)
+  const [formData, setFormData] = useState<CreateServiceDTO>({
+    name: "",
+    description: "",
+    price: 0,
+    duration: 60,
+    currency: "BRL",
+    categoryId: "0",
+    requiresPreparation: false,
+    preparationTime: 0,
+    maxBookingsPerDay: 1,
+    bufferTime: 0,
+    isActive: true,
+    maxAdvanceBooking: 0
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave(formData);
   }
 
-  const handleInputChange = (field: keyof Service, value: any) => {
+  const handleInputChange = (field: keyof CreateServiceDTO, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
@@ -131,16 +125,16 @@ export function ServiceForm({ service, onSave, onCancel }: ServiceFormProps) {
 
             <div className="space-y-2">
               <Label htmlFor="category">Categoria</Label>
-              <Select value={formData.category} onValueChange={(value) => handleInputChange("category", value)}>
+              <Select value={formData.categoryId} onValueChange={(value) => handleInputChange("categoryId", value)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="consulta">Consulta</SelectItem>
-                  <SelectItem value="treinamento">Treinamento</SelectItem>
-                  <SelectItem value="terapia">Terapia</SelectItem>                  
-                  <SelectItem value="workshop">Workshop</SelectItem>
-                  <SelectItem value="outra">Outra</SelectItem>
+                  <SelectItem value="1">Consulta</SelectItem>
+                  <SelectItem value="2">Treinamento</SelectItem>
+                  <SelectItem value="3">Terapia</SelectItem>
+                  <SelectItem value="4">Workshop</SelectItem>
+                  <SelectItem value="5">Outra</SelectItem>
                 </SelectContent>
               </Select>
             </div>

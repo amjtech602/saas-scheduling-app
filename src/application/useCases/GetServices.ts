@@ -1,4 +1,4 @@
-import { Service } from "@/src/domain/Service";
+import { Service } from "@/src/domain/entities/Service";
 import { ServiceRepositoryHttp } from "@/src/infra/repositories/ServiceRepositoryHttp";
 
 export class GetServices {
