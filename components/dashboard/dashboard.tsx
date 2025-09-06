@@ -130,18 +130,20 @@ export function Dashboard() {
                             </Button>
                             <div className="mx-5 text-gray-700 font-semibold text-xs">
                                 <div>
-                                    {session?.user?.name}
+                                    {/* {session?.user?.name} */}
+                                      {user?.firstName} 
                                 </div>
                                 <div>
-                                    {session?.user?.email}
+                                    {/* {session?.user?.email} */}
+                                       {user?.email} 
                                 </div>
                             </div>
                             <Button variant="ghost" size="sm">
                                 <Bell className="h-4 w-4" />
                             </Button>
-                            {/* <Button variant="ghost" size="sm" className="hidden sm:flex" onClick={logout}> */}
+                            <Button variant="ghost" size="sm" className="hidden sm:flex" onClick={logout}>
                             {/* <Button variant="ghost" size="sm" className="hidden sm:flex" onClick={() => signOut({ callbackUrl: "/" })}> */}
-                            <Button variant="ghost" size="sm" className="hidden sm:flex" onClick={() => signOut()}>
+                            {/* <Button variant="ghost" size="sm" className="hidden sm:flex" onClick={() => signOut()}> */}
                                 <LogOut className="h-4 w-4 mr-2" />
                                 Sair
                             </Button>

@@ -167,8 +167,8 @@ export function LoginForm() {
                   <Button
                     type="button"
                     variant="outline"
-                     // onClick={() => initiateSocialLogin('google')}
-                     onClick={() => signIn('google')}
+                     onClick={() => initiateSocialLogin('google')}
+                     //onClick={() => signIn('google')}
                     className="w-full mt-2 flex items-center justify-center gap-2"
                   >
                     <img

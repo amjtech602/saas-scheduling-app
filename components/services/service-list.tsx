@@ -91,6 +91,7 @@ export function ServiceList() {
 
         const data = await usecase.execute();
         console.log({ data });
+        setServices(data);
       } catch (error) {
         console.log(error);
       } finally {
