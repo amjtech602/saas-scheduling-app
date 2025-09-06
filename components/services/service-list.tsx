@@ -90,7 +90,6 @@ export function ServiceList() {
         const usecase = new GetServices(repo);
 
         const data = await usecase.execute();
-        console.log({ data });
         setServices(data);
       } catch (error) {
         console.log(error);
