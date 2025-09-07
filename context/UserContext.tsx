@@ -10,13 +10,6 @@ import {
     useState,
 } from 'react';
 
-// interface User {
-//   id: string
-//   name: string
-//   email: string,
-//   businessName:string,
-//   avatar?: string
-// }
 interface Credential {
     email: string,
     password: string
@@ -68,8 +61,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
                         withCredentials: true,
                     }
                 )
-
-                console.log("userrrrrrrrrr ", response.data);
 
                 setUser(response.data)
             } catch (err) {

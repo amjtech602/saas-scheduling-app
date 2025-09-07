@@ -73,7 +73,6 @@ export function Dashboard() {
     const { data: session, status } = useSession();
     //const { user, logout } = useAuth()
     const { user, loading, logout } = useUser();
-    console.log("Dashboard contruido com user", session)
     const [activeTab, setActiveTab] = useState("overview")
     const [currentWeek, setCurrentWeek] = useState(new Date())
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)

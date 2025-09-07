@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { CreateService } from "@/src/application/useCases/CreateService"
+import { DeleteService } from "@/src/application/useCases/DeleteService"
 import { GetServices } from "@/src/application/useCases/GetServices"
 import { CreateServiceDTO } from "@/src/domain/dto/ServiceDTO"
 import { Service } from "@/src/domain/entities/Service"
@@ -22,7 +23,6 @@ export function ServiceList() {
     const [loading, setLoading] = useState(true);
 
     const repo = new ServiceRepositoryHttp();
-    const createService = new CreateService(repo);
 
     useEffect(() => {
         fetchServices();
@@ -31,9 +31,9 @@ export function ServiceList() {
 
     const fetchServices = async () => {
         try {
-            const repo = new ServiceRepositoryHttp();
-            const usecase = new GetServices(repo);
-            const data = await usecase.execute();
+            const getServices = new GetServices(repo);
+            const data = await getServices.execute();
+            console.log({ data });
             setServices(data);
         } catch (error) {
             console.log(error);
@@ -50,10 +50,9 @@ export function ServiceList() {
             //   prev.map((s) => (s.id === editingService.id ? { ...serviceData, id: editingService.id } : s)),
             // )
         } else {
-
             try {
-                const result = await createService.execute(serviceData);
-                alert(`Serviço criado com ID: ${result.id}`);
+                const createService = new CreateService(repo);
+                await createService.execute(serviceData);
                 fetchServices();
             } catch (error) {
                 console.log(error);
@@ -69,8 +68,10 @@ export function ServiceList() {
         setShowForm(true)
     }
 
-    const handleDeleteService = (serviceId: string) => {
-        setServices((prev) => prev.filter((s) => s.id !== serviceId))
+    const handleDeleteService = async (serviceId: number) => {
+        const deleteService = new DeleteService(repo);
+        await deleteService.execute(serviceId);  
+        fetchServices();      
     }
 
     const handleToggleActive = (serviceId: string) => {
@@ -166,7 +167,7 @@ export function ServiceList() {
                                                 </>
                                             )}
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => handleDeleteService(service.id)} className="text-red-600">
+                                        <DropdownMenuItem onClick={() => handleDeleteService(parseInt(service.id))} className="text-red-600">
                                             <Trash2 className="h-4 w-4 mr-2" />
                                             Deletar
                                         </DropdownMenuItem>
@@ -186,7 +187,7 @@ export function ServiceList() {
                                 </div>
 
                                 <div className="flex justify-between items-center text-sm text-gray-500">
-                                    <span>{service.bookings || 0} Reserva(s)</span>
+                                    <span>{0} Reserva(s)</span>
                                     <span>Máx. {service.maxAdvanceBooking} dias de antecedência</span>
                                 </div>
 

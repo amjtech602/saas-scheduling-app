@@ -10,16 +10,20 @@ const api = axios.create({
 
 
 export class ServiceRepositoryHttp implements ServiceRepository {
-
+    
     async getAll(): Promise<Service[]> {
         const response = await api.get('/services');
         return response.data;
     }
-
+    
     async create(service: CreateServiceDTO): Promise<Service> {
         const response = await api.post('/services', service);
         return response.data;
     }
-
+    
+    async delete(serviceId: number): Promise<void> {
+        const response = await api.delete(`/services/${serviceId}`);
+        return response.data;
+    }
 }
 
