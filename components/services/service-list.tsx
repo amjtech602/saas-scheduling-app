@@ -4,12 +4,13 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { CreateService } from "@/src/application/useCases/CreateService"
-import { DeleteService } from "@/src/application/useCases/DeleteService"
-import { GetServices } from "@/src/application/useCases/GetServices"
-import { CreateServiceDTO } from "@/src/domain/dto/ServiceDTO"
+import { CreateService } from "@/src/application/useCases/service/CreateService"
+import { DeleteService } from "@/src/application/useCases/service/DeleteService"
+import { GetServices } from "@/src/application/useCases/service/GetServices"
+import { UpdateService } from "@/src/application/useCases/service/UpdateService"
+import { CreateServiceDTO } from "@/src/domain/dto/CreateServiceDTO"
 import { Service } from "@/src/domain/entities/Service"
-import { ServiceRepositoryHttp } from "@/src/infra/repositories/ServiceRepositoryHttp"
+import { ServiceRepositoryHttp } from "@/src/infra/repositories/service/ServiceRepositoryHttp"
 import { Copy, Edit, Eye, EyeOff, MoreHorizontal, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
 import { ServiceForm } from "./service-form"
@@ -18,7 +19,7 @@ import { ServiceForm } from "./service-form"
 export function ServiceList() {
 
     const [services, setServices] = useState<Service[]>([])
-    const [editingService, setEditingService] = useState<Service | null>(null)
+    const [editingService, setEditingService] = useState<CreateServiceDTO | null>(null)
     const [showForm, setShowForm] = useState(false)
     const [loading, setLoading] = useState(true);
 
@@ -33,7 +34,6 @@ export function ServiceList() {
         try {
             const getServices = new GetServices(repo);
             const data = await getServices.execute();
-            console.log({ data });
             setServices(data);
         } catch (error) {
             console.log(error);
@@ -44,34 +44,37 @@ export function ServiceList() {
 
 
     const handleSaveService = async (serviceData: CreateServiceDTO) => {
-        if (editingService) {
-            // Update existing service
-            // setServices((prev) =>
-            //   prev.map((s) => (s.id === editingService.id ? { ...serviceData, id: editingService.id } : s)),
-            // )
-        } else {
-            try {
-                const createService = new CreateService(repo);
-                await createService.execute(serviceData);
-                fetchServices();
-            } catch (error) {
-                console.log(error);
-                alert("Erro ao criar o serviço");
+        
+        try {
+            if (editingService) {
+                const useCase = new UpdateService(repo);
+                await useCase.execute({...serviceData, id: editingService.id});
+            } else {
+                const useCase = new CreateService(repo);
+                useCase.execute(serviceData);
             }
+        } catch(error) {
+            console.log(error);
+            alert("Erro na execução");
+        } finally {
+            fetchServices();
+            setShowForm(false);
         }
-        setShowForm(false)
-        setEditingService(null)
     }
 
     const handleEditService = (service: Service) => {
-        setEditingService(service)
+        const { category, ...serviceDTO } = service;
+        // const categoryId = serviceDTO.categoryId.toString();
+        const categoryId = "1";
+        const id = parseInt(serviceDTO.id);
+        setEditingService({ ...serviceDTO, id, categoryId });
         setShowForm(true)
     }
 
     const handleDeleteService = async (serviceId: number) => {
         const deleteService = new DeleteService(repo);
-        await deleteService.execute(serviceId);  
-        fetchServices();      
+        await deleteService.execute(serviceId);
+        fetchServices();
     }
 
     const handleToggleActive = (serviceId: string) => {

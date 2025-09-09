@@ -1,6 +1,6 @@
-import { CreateServiceDTO } from "@/src/domain/dto/ServiceDTO";
+import { CreateServiceDTO } from "@/src/domain/dto/CreateServiceDTO";
 import { Service } from "@/src/domain/entities/Service";
-import { ServiceRepository } from "@/src/infra/repositories/ServiceRepository";
+import { ServiceRepository } from "@/src/infra/repositories/service/ServiceRepository";
 
 export class CreateService {
     constructor(private repository: ServiceRepository) {}

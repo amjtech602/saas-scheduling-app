@@ -9,9 +9,12 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
-import { CreateServiceDTO } from "@/src/domain/dto/ServiceDTO"
+import { GetCategories } from "@/src/application/useCases/category/GetCategories"
+import { CreateServiceDTO } from "@/src/domain/dto/CreateServiceDTO"
+import { Category } from "@/src/domain/entities/Category"
+import { CategoryRepositoryHttps } from "@/src/infra/repositories/category/CategoryRepositoryHttps"
 import { X } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 
 interface ServiceFormProps {
@@ -22,20 +25,36 @@ interface ServiceFormProps {
 
 export function ServiceForm({ service, onSave, onCancel }: ServiceFormProps) {
 
+  const [categories, setCategories] = useState<Category[]>([]);
   const [formData, setFormData] = useState<CreateServiceDTO>({
-    name: "",
-    description: "",
-    price: 0,
-    duration: 60,
-    currency: "BRL",
-    categoryId: "0",
-    requiresPreparation: false,
-    preparationTime: 0,
-    maxBookingsPerDay: 1,
-    bufferTime: 0,
-    isActive: true,
-    maxAdvanceBooking: 0
+    name: service?.name || "",
+    description: service?.description || "",
+    price: service?.price || 0,
+    duration: service?.duration || 60,
+    currency: service?.currency || "BRL",
+    categoryId: service?.categoryId || "0",
+    requiresPreparation: service?.requiresPreparation || false,
+    preparationTime: service?.preparationTime || 0,
+    maxBookingsPerDay: service?.maxBookingsPerDay ||1,
+    bufferTime: service?.bufferTime || 0,
+    isActive: service?.isActive || true,
+    maxAdvanceBooking: service?.maxAdvanceBooking || 0
   });
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const repo = new CategoryRepositoryHttps();
+      const getCategories = new GetCategories(repo);
+      const data = await getCategories.execute();
+      setCategories(data);
+    } catch(error) {
+      console.log(error)
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -130,11 +149,10 @@ export function ServiceForm({ service, onSave, onCancel }: ServiceFormProps) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1">Consulta</SelectItem>
-                  <SelectItem value="2">Treinamento</SelectItem>
-                  <SelectItem value="3">Terapia</SelectItem>
-                  <SelectItem value="4">Workshop</SelectItem>
-                  <SelectItem value="5">Outra</SelectItem>
+                  {categories.map(category => (
+                    <SelectItem key={category.id} value={category.id.toString()}>{category.name}</SelectItem>
+                  ))}
+                  
                 </SelectContent>
               </Select>
             </div>
