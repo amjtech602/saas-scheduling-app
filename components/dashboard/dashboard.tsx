@@ -25,7 +25,6 @@ import {
     Users,
     X,
 } from "lucide-react"
-import { useSession } from "next-auth/react"
 import { useState } from "react"
 import { BookingManagement } from "./booking-management"
 
@@ -70,12 +69,13 @@ const mockServices = [
 ]
 
 export function Dashboard() {
-    const { data: session, status } = useSession();
+    // const { data: session, status } = useSession();
     //const { user, logout } = useAuth()
     const { user, loading, logout } = useUser();
     const [activeTab, setActiveTab] = useState("overview")
     const [currentWeek, setCurrentWeek] = useState(new Date())
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
 
     const getWeekDates = (date: Date) => {
         const week = []

@@ -10,14 +10,12 @@ import { useUser } from '@/context/UserContext'
 import { useI18n } from "@/lib/i18n/context"
 import { DialogTitle } from "@radix-ui/react-dialog"
 import { Calendar, Clock, Users } from "lucide-react"
-import { useRouter } from "next/navigation"
 import type React from "react"
 import { useState } from "react"
 export function LoginForm() {
   // const { login, register } = useAuth();
-  const { user, loading, logout, login, initiateSocialLogin } = useUser();
+  const { user, loading, login, initiateSocialLogin } = useUser();
   const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
   const { t } = useI18n()
   const [open, setOpen] = useState(false)
   const [error, setError] = useState("")
@@ -50,8 +48,8 @@ export function LoginForm() {
     try {
       await login({email: loginData.email, password: loginData.password})
       setOpen(false)
-    } catch (error) {
-      console.error(t("auth.loginFailed"), error)
+    } catch (error: any) {
+      setError(error?.response?.data?.message);
     } finally {
       setIsLoading(false)
     }
