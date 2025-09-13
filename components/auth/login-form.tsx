@@ -18,7 +18,8 @@ export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
   const { t } = useI18n()
   const [open, setOpen] = useState(false)
-  const [error, setError] = useState("")
+  const [errorLogin, setErrorLogin] = useState("")
+  const [errorRegister, setErrorRegister] = useState("")
   const [loginData, setLoginData] = useState({ email: "", password: "" })
   const [registerData, setRegisterData] = useState({
     email: "",
@@ -49,7 +50,7 @@ export function LoginForm() {
       await login({ email: loginData.email, password: loginData.password })
       setOpen(false)
     } catch (error: any) {
-      setError(error?.response?.data?.message);
+      setErrorLogin(error?.response?.data?.message);
     } finally {
       setIsLoading(false)
     }
@@ -60,11 +61,12 @@ export function LoginForm() {
     setIsLoading(true)
 
     try {
-      console.log({registerData});
+      console.log({ registerData });
       await register(registerData)
       setOpen(false)
-    } catch (error) {
+    } catch (error: any) {
       console.error(t("auth.registrationFailed"), error)
+      setErrorRegister(error?.response?.data?.message)
     } finally {
       setIsLoading(false)
     }
@@ -153,7 +155,7 @@ export function LoginForm() {
                   <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? t("auth.signingIn") : t("auth.signIn")}
                   </Button>
-                  {error && <p className="text-red-500">{error}</p>}
+                  {errorLogin && <p className="text-red-500">{errorLogin}</p>}
 
                   <div className="flex items-center space-x-2 mt-2">
                     <div className="h-px flex-1 bg-gray-200" />
@@ -229,6 +231,7 @@ export function LoginForm() {
                   <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? t("auth.creatingAccount") : t("auth.createAccountButton")}
                   </Button>
+                  {errorRegister && <p className="text-red-500">{errorRegister}</p>}
                 </form>
               </div>
             </TabsContent>

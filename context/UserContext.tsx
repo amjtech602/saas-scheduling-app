@@ -108,6 +108,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         },
             { withCredentials: true });
         console.log({ response });
+        setUser(response.data);
+    
     }
 
 

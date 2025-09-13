@@ -70,7 +70,7 @@ export const translations = {
     alreadyHaveAccount: "Já tem uma conta?",
     createAccount: "Criar Conta",
     welcomeBack: "Bem-vindo de volta",
-    getStarted: "Começar",
+    getStarted: "Registrar",
     loginToAccount: "Entre na sua conta",
     createNewAccount: "Criar uma nova conta",
     businessNameOptional: "Nome da Empresa (Opcional)",
