@@ -4,6 +4,6 @@ export class GetCategories {
     constructor(private repository: CategoryRepository) {}
 
     async execute() {
-        return this.repository.getAll();
+        return await this.repository.getAll();
     }
 }

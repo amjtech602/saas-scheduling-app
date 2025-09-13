@@ -13,8 +13,8 @@ export class CategoryRepositoryHttps implements CategoryRepository {
         const response = await api.get('categories');
         return response.data;
     }
-    async create(category: Category): Promise<Category> {
-        const response = await api.post('categories', {name: category.name});
+    async create(name: string): Promise<Category> {
+        const response = await api.post('categories', {name});
         return response.data;
     }
 

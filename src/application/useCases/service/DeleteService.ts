@@ -1,4 +1,4 @@
-import { ServiceRepository } from "@/src/infra/repositories/ServiceRepository";
+import { ServiceRepository } from "@/src/infra/repositories/service/ServiceRepository";
 
 export class DeleteService {
     constructor(private repository: ServiceRepository) {}

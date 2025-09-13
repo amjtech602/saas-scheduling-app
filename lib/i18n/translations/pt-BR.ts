@@ -63,6 +63,8 @@ export const translations = {
     password: "Senha",
     confirmPassword: "Confirmar Senha",
     fullName: "Nome Completo",
+    firstName: "Primeiro Nome",
+    lastName: "Último Nome",
     forgotPassword: "Esqueceu a senha?",
     dontHaveAccount: "Não tem uma conta?",
     alreadyHaveAccount: "Já tem uma conta?",

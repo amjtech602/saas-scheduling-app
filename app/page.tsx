@@ -8,22 +8,20 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { useI18n } from "@/lib/i18n/context"
 import { ArrowRight, Calendar, Clock, Star, Users } from "lucide-react"
 //import { useSession } from "next-auth/react"
-import { UserProvider,useUser } from '@/context/UserContext'; // substituindo o nextAuth
-import { useSession } from "next-auth/react"
+import { UserProvider, useUser } from '@/context/UserContext'; // substituindo o nextAuth
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
 
 
 function AppContent() {
-  const { data: session, status } = useSession();
+  // const { data: session, status } = useSession();
    const { user, loading } = useUser()
   const router = useRouter();
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/");
-    }
-  }, [status, router]);
+  // useEffect(() => {
+  //   if (status === "unauthenticated") {
+  //     router.push("/");
+  //   }
+  // }, [status, router]);
 
   //   if (status === "loading") {
   //     return (
@@ -44,6 +42,8 @@ function AppContent() {
       </div>
     )
   }
+
+  console.log({user});
 
   return user ? <Dashboard /> : <LandingPage />
 }

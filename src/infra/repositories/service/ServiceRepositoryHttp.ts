@@ -10,6 +10,10 @@ const api = axios.create({
 
 
 export class ServiceRepositoryHttp implements ServiceRepository {
+    async getById(id: number): Promise<Service> {
+       const response = await api.get(`service/${id}`);
+       return response.data;
+    }
     
     async create(service: CreateServiceDTO): Promise<Service> {
         const response = await api.post('/services', service);

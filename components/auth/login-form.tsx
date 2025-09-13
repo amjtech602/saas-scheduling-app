@@ -14,7 +14,7 @@ import type React from "react"
 import { useState } from "react"
 export function LoginForm() {
   // const { login, register } = useAuth();
-  const { user, loading, login, initiateSocialLogin } = useUser();
+  const { user, loading, login, register, initiateSocialLogin } = useUser();
   const [isLoading, setIsLoading] = useState(false)
   const { t } = useI18n()
   const [open, setOpen] = useState(false)
@@ -23,8 +23,8 @@ export function LoginForm() {
   const [registerData, setRegisterData] = useState({
     email: "",
     password: "",
-    name: "",
-    businessName: "",
+    firstName: "",
+    lastName: "",
   })
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -46,7 +46,7 @@ export function LoginForm() {
     // setIsLoading(false)
 
     try {
-      await login({email: loginData.email, password: loginData.password})
+      await login({ email: loginData.email, password: loginData.password })
       setOpen(false)
     } catch (error: any) {
       setError(error?.response?.data?.message);
@@ -59,14 +59,15 @@ export function LoginForm() {
     e.preventDefault()
     setIsLoading(true)
 
-    // try {
-    //   await register(registerData.email, registerData.password, registerData.name, registerData.businessName)
-    //   setOpen(false)
-    // } catch (error) {
-    //   console.error(t("auth.registrationFailed"), error)
-    // } finally {
-    //   setIsLoading(false)
-    // }
+    try {
+      console.log({registerData});
+      await register(registerData)
+      setOpen(false)
+    } catch (error) {
+      console.error(t("auth.registrationFailed"), error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
 
@@ -163,8 +164,8 @@ export function LoginForm() {
                   <Button
                     type="button"
                     variant="outline"
-                     onClick={() => initiateSocialLogin('google')}
-                     //onClick={() => signIn('google')}
+                    onClick={() => initiateSocialLogin('google')}
+                    //onClick={() => signIn('google')}
                     className="w-full mt-2 flex items-center justify-center gap-2"
                   >
                     <img
@@ -186,22 +187,22 @@ export function LoginForm() {
                 </div>
                 <form onSubmit={handleRegister} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="register-name">{t("auth.fullName")}</Label>
+                    <Label htmlFor="register-first-name">{t("auth.firstName")}</Label>
                     <Input
-                      id="register-name"
-                      placeholder="John Doe"
-                      value={registerData.name}
-                      onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
+                      id="register-first-name"
+                      placeholder="John"
+                      value={registerData.firstName}
+                      onChange={(e) => setRegisterData({ ...registerData, firstName: e.target.value })}
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="register-business">{t("auth.businessNameOptional")}</Label>
+                    <Label htmlFor="register-last-name">{t("auth.lastName")}</Label>
                     <Input
-                      id="register-business"
-                      placeholder="Doe Consulting"
-                      value={registerData.businessName}
-                      onChange={(e) => setRegisterData({ ...registerData, businessName: e.target.value })}
+                      id="register-last-name"
+                      placeholder="Doe"
+                      value={registerData.lastName}
+                      onChange={(e) => setRegisterData({ ...registerData, lastName: e.target.value })}
                     />
                   </div>
                   <div className="space-y-2">

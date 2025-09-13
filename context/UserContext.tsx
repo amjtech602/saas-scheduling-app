@@ -15,6 +15,16 @@ interface Credential {
     password: string
 }
 
+interface RegisterData {
+    firstName: string,
+    lastName: string,
+    email: string,
+    role?: string,
+    password: string,
+    name: string,
+    // businessName?: string
+}
+
 interface User {
     id: Number,
     email: string
@@ -36,6 +46,7 @@ interface UserContextType {
     initiateSocialLogin: (provider: string, redirectPath?: string) => Promise<void>
     logout: Function
     login: Function
+    register: Function
 }
 
 const UserContext = createContext<UserContextType>({
@@ -43,7 +54,8 @@ const UserContext = createContext<UserContextType>({
     loading: true,
     initiateSocialLogin: async (_provider: string, _redirectPath?: string) => { },
     logout: Function,
-    login: Function
+    login: Function,
+    register: Function
 })
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
@@ -84,6 +96,20 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         setUser(response.data);
     }
 
+    const register = async (registerData: RegisterData) => {
+        const response = await axios.post('https://anotadoai.com.br/agendei-api/v1/auth/users', {
+            firstName: registerData.firstName,
+            lastName: registerData.lastName,
+            email: registerData.email,
+            role: 'user',
+            password: registerData.password,
+            timeZone: 'America/Sao_Paulo',
+            authProvider: 'LOCAL'
+        },
+            { withCredentials: true });
+        console.log({ response });
+    }
+
 
     const initiateSocialLogin = async (provider: string, redirectPath = '/') => {
         const baseUrl = window.location.origin; // exemplo: http://localhost:3000 ou https://flexybot.com.br
@@ -107,7 +133,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
 
     return (
-        <UserContext.Provider value={{ user, loading, login, logout, initiateSocialLogin }}>
+        <UserContext.Provider value={{ user, loading, login, logout, register, initiateSocialLogin }}>
             {children}
         </UserContext.Provider>
     )

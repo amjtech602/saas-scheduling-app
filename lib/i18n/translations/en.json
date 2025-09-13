@@ -34,6 +34,8 @@
     "createAccount": "Create your account",
     "createAccountDescription": "Start managing your appointments today",
     "fullName": "Full Name",
+    "firstName": "First Name",
+    "lastName": "Last Name",
     "businessName": "Business Name",
     "businessNameOptional": "Business Name (Optional)",
     "email": "Email",
